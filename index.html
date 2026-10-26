@@ -9,13 +9,22 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="header"><a class="wordmark" href="#" aria-label="RFW-A home"><span class="brand-symbol">r<span>↗</span></span>RFW–A<span class="brand-small">RESEARCH PROJECT</span></a><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">Menu <span>＋</span></button><nav aria-label="Main navigation"><a href="#dataset">Dataset</a><a href="#worlds">Explore scenes</a><a href="#explore">Interactive demo</a><a href="#method">Method</a><a href="#editing">Editing</a><a href="#validation">Physical validation</a><a href="#benchmark">Benchmark</a><a href="#citation">Citation</a></nav></header>
+<header class="header"><a class="wordmark" href="#" aria-label="RFW-A home">RFW-A</a><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">Menu <span>＋</span></button><nav aria-label="Main navigation"><a href="#paper-title" data-show-paper>Paper</a><a href="#dataset">Dataset</a><a href="#worlds">Explore scenes</a><a href="#explore">Interactive demo</a><a href="#method">Method</a><a href="#editing">Editing</a><a href="#validation">Physical validation</a><a href="#citation">Citation</a></nav></header>
 <main id="main">
-<section class="intro wrap">
- <div class="eyebrow"><span class="live-dot"></span> AGENTIC INTELLIGENCE. PROCEDURAL SCALE.</div>
- <div class="intro-grid"><h1>RFW-A: Agentic Procedural Generation of 400K Articulated Assets over 500 Categories</h1><div class="intro-aside"><p class="paper-title">RFW-A: Agentic Procedural Generation of<br class="desktop"/> 400K Articulated Assets over 500 Categories</p><p class="intro-copy">A reusable generator-based pipeline for scalable articulated asset generation, physical annotation, directed editing, and robot learning.</p><div class="resource-links" id="resource-links"><button disabled>Paper <span>SOON</span></button><button disabled>Code <span>SOON</span></button><button disabled>Dataset <span>SOON</span></button></div><button class="text-link film-open">Watch the film <span class="play-small">▶</span><span class="muted">02:24</span></button></div></div>
- <div class="authors"><div id="author-details"></div></div><details class="hero-abstract"><summary>Read the abstract <span>＋</span></summary><p id="hero-abstract-text"></p></details>
+<section class="project-hero" id="home" aria-labelledby="paper-title">
+ <video id="hero-video" class="hero-background" autoplay muted loop playsinline preload="metadata" poster="./media/scenes/indoor.webp" aria-label="RFW-A indoor scene"><source src="./media/indoor.mp4" type="video/mp4"/></video>
+ <div class="hero-shade" aria-hidden="true"></div>
+ <div class="hero-paper" id="hero-paper-info">
+  <h1 id="paper-title" tabindex="-1">RFW-A: Agentic Procedural Generation of 400K Articulated Assets over 500 Categories</h1>
+  <div id="author-details" class="hero-authors" aria-label="Authors and affiliations"></div>
+  <div class="hero-actions"><button class="hero-film film-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7z"/></svg>Watch full video <small>2:24</small></button><div class="resource-links" id="resource-links"><button disabled>Paper <span>SOON</span></button><button disabled>Code <span>SOON</span></button><button disabled>Dataset <span>SOON</span></button></div><a href="#worlds" class="hero-link">Explore scenes ↓</a><a href="./demo.html" class="hero-link">Interactive demo ↗</a></div>
+ </div>
+ <div class="hero-controls">
+  <div class="hero-controls-row"><div class="hero-scene-tabs" role="group" aria-label="Choose a background scene"><button data-hero-scene="indoor" aria-pressed="true">Indoor</button><button data-hero-scene="outdoor" aria-pressed="false">Outdoor</button><button data-hero-scene="space" aria-pressed="false">Space</button><button data-hero-scene="laboratory" aria-pressed="false">Laboratory</button></div><div class="hero-playback"><button id="hero-play" aria-controls="hero-video">Pause video</button><button id="hero-view" aria-controls="hero-paper-info" aria-expanded="true">Watch scene</button></div></div>
+  <div class="hero-caption"><span id="hero-scene-caption">Indoor · Articulated assets generated with RFW-A</span><a id="hero-explore" href="#worlds">Explore this scene ↓</a></div>
+ </div>
 </section>
+<div class="wrap hero-abstract-wrap"><details class="hero-abstract"><summary>Read the abstract <span>＋</span></summary><p id="hero-abstract-text"></p></details></div>
 <section class="section wrap dataset-section" id="dataset" aria-labelledby="dataset-title">
  <div class="section-heading"><div><span class="eyebrow">RFW-A-400K</span><h2 id="dataset-title">One generator.<br/>Many articulated assets.</h2></div><p>Agents build reusable category-level programs. Different seeds sample components, resolve their dependencies, and assemble new assets—without another model call.</p></div>
  <div class="dataset-facts" aria-label="Dataset release statistics"><div><strong>402,410</strong><span>assets in the paper release</span></div><div><strong>531</strong><span>object categories</span></div><div><strong>2.68M</strong><span>parsed links</span></div><div><strong>84.65%</strong><span>assets with multiple movable joints</span></div></div>

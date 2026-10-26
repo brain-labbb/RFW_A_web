@@ -1,5 +1,6 @@
 import './dataset.js';
 import './scenes.js';
+import './hero.js';
 import './style.css';
 import {scenes,edits,tasks,scaleRows,qualityRows,transferRows} from './data.js';
 const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];
@@ -111,7 +112,7 @@ $$('[data-task]').forEach(b=>b.addEventListener('click',()=>{selectTab($$('[data
 $('#play-pair').addEventListener('click',()=>{if(sim.paused||real.paused){sim.currentTime=0;real.currentTime=0;Promise.allSettled([sim.play(),real.play()]);$('#play-pair').innerHTML='Pause both videos <span>Ⅱ</span>';}else{sim.pause();real.pause();$('#play-pair').innerHTML='Play both videos <span>▶</span>';}});
 fetch(url('data/paper.json')).then(r=>r.json()).then(p=>{
  const supers=s=>s.replaceAll('\\dagger','†').replaceAll('\\ddagger','‡');
- $('#author-details').innerHTML=`<p>${p.authors.map(([n,a])=>`${esc(a)}<sup>${esc(supers(n))}</sup>`).join(' · ')}</p><p class="affiliations">${p.affiliations.map(([n,a])=>`<sup>${n}</sup> ${esc(a)}`).join(' &nbsp;·&nbsp; ')}<br/>* Equal contribution &nbsp; † Project leader &nbsp; ‡ Corresponding authors</p>`;$('#abstract-text').textContent=p.abstract;$('#hero-abstract-text').textContent=p.abstract;
+ $('#author-details').innerHTML=`<div class="hero-author-list">${p.authors.map(([n,a])=>`<span>${esc(a)}<sup>${esc(supers(n))}</sup></span>`).join('')}</div><div class="hero-affiliations">${p.affiliations.map(([n,a])=>`<span><sup>${n}</sup> ${esc(a)}</span>`).join('')}</div><p class="hero-author-notes">* Equal contribution &nbsp; · &nbsp; † Project leader &nbsp; · &nbsp; ‡ Corresponding authors</p>`;$('#abstract-text').textContent=p.abstract;$('#hero-abstract-text').textContent=p.abstract;
 }).catch(()=>{});
 fetch(url('data/resources.json')).then(r=>r.json()).then(resources=>{for(const [key,href]of Object.entries(resources)){if(!href||!/^https:\/\//.test(href))continue;$$('.resource-links button').filter(b=>b.textContent.toLowerCase().startsWith(key)).forEach(b=>{const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';a.textContent=key[0].toUpperCase()+key.slice(1)+' ↗';b.replaceWith(a);});}}).catch(()=>{});
 

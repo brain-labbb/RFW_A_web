@@ -96,3 +96,11 @@ The 12 five-second clips are rendered at 960 × 540, 24 fps with Cycles/OptiX. `
 For the space scene, `scripts/extend_space_stage.py` joins additional terrain to the existing boundary and replaces the finite star backdrop with a camera-visible panoramic dome using the native procedural material. Earth, asset geometry, rigs, and lighting are retained. These changes exist only in the render copy; the four original scene files are never overwritten. The space map uses native frame 240 to show the assembled scene.
 
 Run `TEST_URL=http://127.0.0.1:4175/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:scenes` to verify all 12 clip selections, playback, materials and joints, map/video switching, mobile layouts, and direct 3D links.
+
+## Video masthead
+
+The first screen uses a full-width, muted scene video behind the paper title, all 22 authors, affiliations, and resource links. Its layout follows the supplied Artisan screenshot: a white navigation bar, white overlaid metadata, translucent buttons, and scene/playback controls along the bottom. The four scene buttons change the background. “Watch scene” hides the paper overlay; Escape or the Paper navigation restores it. “Explore this scene” selects the corresponding scene explorer.
+
+“Watch full video” opens the supplied `2610261545030522.mp4` (2:24, including audio) using the existing film player; the published MP4 matches the supplied file byte-for-byte. Other videos pause while the film is open. Background playback pauses offscreen and respects reduced-motion and data-saving preferences. Benchmark remains a results section, without a navigation or hero button. Paper, Code, and Dataset links remain pending.
+
+`npm run test:hero` checks scene switching/playback, overlay controls, the full film, pending links, mobile layout, and reduced-motion behavior. Set `TEST_URL` and `PLAYWRIGHT_BROWSERS_PATH` as in the other browser checks.
