@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RFW-A · Interactive demo</title>
+  <meta name="description" content="Interactive articulated asset browser for RFW-A."/>
+</head>
+<body class="demo-page">
+<header class="header demo-header"><a class="wordmark" href="./" aria-label="Back to RFW-A home"><span class="brand-symbol">r</span>RFW–A<span class="brand-small">INTERACTIVE DEMO</span></a><a class="back-home" href="./">← Project page</a></header>
+<main class="demo-shell">
+  <aside class="demo-sidebar">
+    <div class="demo-intro"><span class="eyebrow">INTERACTIVE DEMO</span><h1>Articulated assets,<br/>ready to explore.</h1><p>Browse native scene assets from RFW-A. Rotate, animate, and inspect the physical properties bound to each material.</p></div>
+    <div class="demo-scenes" role="tablist" aria-label="Scene filter"><span class="eyebrow">SCENES</span><button class="demo-scene active" data-scene="all" role="tab" aria-selected="true">All assets <span>84</span></button><button class="demo-scene" data-scene="indoor" role="tab" aria-selected="false">Indoor <span>29</span></button><button class="demo-scene" data-scene="outdoor" role="tab" aria-selected="false">Outdoor <span>24</span></button><button class="demo-scene" data-scene="space" role="tab" aria-selected="false">Space <span>10</span></button><button class="demo-scene" data-scene="laboratory" role="tab" aria-selected="false">Laboratory <span>21</span></button></div>
+    <label class="demo-search"><span>⌕</span><input id="demo-search" type="search" placeholder="Search assets…" aria-label="Search assets"/></label>
+    <div class="demo-list" id="demo-list" aria-live="polite"></div>
+  </aside>
+  <section class="demo-stage">
+    <div class="demo-stage-top"><div><span class="eyebrow" id="demo-scene-label">ALL SCENES / NATIVE ASSETS</span><h2 id="demo-asset-name">Select an asset</h2></div><button id="demo-reset" class="icon-button" title="Reset view" aria-label="Reset view">↺</button></div>
+    <div id="demo-viewer"><div class="viewer-loading" id="demo-loading">Select an asset to load its native geometry.</div><span class="viewer-hint">DRAG TO ROTATE · SCROLL TO ZOOM</span></div>
+    <div class="demo-motion"><button class="icon-button" id="demo-play" disabled aria-label="Play asset motion">▶</button><input id="demo-progress" type="range" min="0" max="1000" value="0" disabled aria-label="Asset motion progress"/><span class="mono" id="demo-time">0.0 s</span></div>
+    <div class="demo-detail-tabs" role="tablist" aria-label="Asset information"><button role="tab" aria-selected="true" data-detail="structure">Structure & motion</button><button role="tab" aria-selected="false" data-detail="materials">Materials & physics</button></div>
+    <div class="demo-details" id="demo-details"><p class="demo-empty">Choose an asset from the list.</p></div>
+  </section>
+</main>
+<footer class="demo-footer"><span>RFW-A · 402,410 procedurally generated articulated assets</span><a href="./">Back to project page ↑</a></footer>
+<script type="module" src="/src/demo.js"></script>
+</body>
+</html>
