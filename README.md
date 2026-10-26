@@ -43,6 +43,7 @@ The 84 instances are a scene showcase, not the full 402,410-asset release. The s
 - `src/style.css`: responsive typography, colors, layout; local font declarations.
 - `src/main.js`: scene switching, explorer, editors, tables, dialogs, and videos.
 - `src/viewer.js`: lazily loaded Three.js viewer and animation playback.
+- `demo.html` / `src/demo.js`: the full-screen Interactive demo opened from the project page.
 - `src/data.js`: page comparison values and editing metadata.
 - `public/data/catalog.json`: 84 native scene asset instances.
 - `public/data/physics/`: six physical-property fields per material group.
@@ -67,6 +68,6 @@ Existing source physics records were examined first; 57/84 assets have source-se
 PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm test
 ```
 
-Run against the preview server with `TEST_URL=http://127.0.0.1:4174/` if desired. The test checks catalog/file coverage, physical-value ranges, pending release buttons, model animation, scene/search/edit controls, result tables, video playback, desktop/mobile layouts, and browser/network errors. Reports and screenshots go to `/tmp/rfw-web/`.
+Run against the preview server with `TEST_URL=http://127.0.0.1:4174/` if desired. The test checks catalog/file coverage, physical-value ranges, pending release buttons, model animation, scene/search/edit controls, result tables, video playback, desktop/mobile layouts, and browser/network errors. The full-screen demo has a separate smoke check for scene filtering, native geometry loading, and material properties. Reports and screenshots go to `/tmp/rfw-web/`.
 
 Design references the section organization of [Artisan](https://physicalvision.github.io/artisan/). Page implementation, visual design, assets, authors, and numerical results are specific to RFW-A.
