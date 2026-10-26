@@ -32,10 +32,33 @@
  <div class="dataset-connections"><article><h3>Sample for diversity</h3><p>Different seeds reuse the same construction logic. The family examples above show the resulting structure and material variation.</p><a href="#method">How generators are constructed →</a></article><article><h3>Edit with intent</h3><p>Specify a component, count, material, or dimension. The program resolves dependent geometry again.</p><a href="#editing">Explore directed editing →</a></article><article><h3>Train with the assets</h3><p>Evaluate the resulting data through articulation estimation and zero-shot sim-to-real manipulation.</p><a href="#benchmark">See downstream results →</a><a href="#sim2real">Watch robot manipulation →</a></article></div>
 </section>
 
-<section class="worlds wrap" id="worlds" aria-label="Four articulated worlds">
- <div class="scene-heading"><div><span class="eyebrow">01 / EXPLORE THE SCENES</span><h2>Explore the scenes</h2></div><p>Browse the environments assembled from RFW-A assets. Select a scene to watch its motion and explore its objects.</p></div>
- <div class="world-stage"><video id="scene-video" muted playsinline loop preload="none" poster="./media/indoor.webp" aria-label="Indoor articulated scene"><source src="./media/indoor.mp4" type="video/mp4"/></video><div class="scene-shade"></div><div class="scene-top"><span class="scene-pill"><span class="live-dot"></span> WORLDS BUILT WITH RFW-A</span><button id="scene-play" class="glass-button" aria-label="Play scene video">▶ <span>Play scene</span></button></div><div class="scene-bottom"><div><span class="mono scene-index" id="scene-index">01 / 04</span><h2 id="scene-title">Everyday spaces.<br/>Extraordinary possibilities.</h2><p id="scene-subtitle">A home filled with objects that open, slide, fold, and turn.</p></div><a href="#explore" class="circle-link" aria-label="Explore scene assets">↗</a></div></div>
- <div class="scene-tabs" role="tablist" aria-label="Select a world"><button role="tab" aria-selected="true" data-scene="indoor"><span class="mono">01</span> Indoor <span class="scene-tab-count">29 assets</span></button><button role="tab" aria-selected="false" data-scene="outdoor"><span class="mono">02</span> Outdoor <span class="scene-tab-count">24 assets</span></button><button role="tab" aria-selected="false" data-scene="space"><span class="mono">03</span> Space <span class="scene-tab-count">10 assets</span></button><button role="tab" aria-selected="false" data-scene="laboratory"><span class="mono">04</span> Laboratory <span class="scene-tab-count">21 assets</span></button></div>
+<section class="worlds wrap scene-showcase" id="worlds" aria-labelledby="worlds-title">
+ <div class="scene-heading"><div><span class="eyebrow">EXPLORE THE SCENES</span><h2 id="worlds-title">From a scene to its moving parts.</h2></div><p>Choose a scene, then select a highlighted object to see it up close and inspect its materials and joints.</p></div>
+ <div class="scene-tabs scene-picker" role="tablist" aria-label="Select a world">
+  <button role="tab" aria-selected="true" data-scene="indoor"><img src="./media/scenes/indoor.webp" alt=""/><span>Indoor<small>29 assets</small></span></button>
+  <button role="tab" aria-selected="false" data-scene="outdoor"><img src="./media/scenes/outdoor.webp" alt=""/><span>Outdoor<small>24 assets</small></span></button>
+  <button role="tab" aria-selected="false" data-scene="space"><img src="./media/scenes/space.webp" alt=""/><span>Space<small>10 assets</small></span></button>
+  <button role="tab" aria-selected="false" data-scene="laboratory"><img src="./media/scenes/laboratory.webp" alt=""/><span>Laboratory<small>21 assets</small></span></button>
+ </div>
+ <div class="scene-workbench">
+  <div class="scene-map-column"><div class="world-stage scene-map">
+   <img id="scene-map-image" src="./media/scenes/indoor.webp" width="960" height="540" alt="Indoor scene with selectable objects"/>
+   <video id="scene-video" muted playsinline loop preload="none" poster="./media/scenes/indoor.webp" aria-label="Indoor articulated scene"><source src="./media/indoor.mp4" type="video/mp4"/></video>
+   <div id="scene-hotspots" aria-label="Featured objects in the scene"></div>
+  </div><div class="scene-map-toolbar"><span id="scene-map-caption">Indoor · Select a highlighted object</span><button id="scene-play" aria-label="Play scene video">▶ <span>Watch scene</span></button></div>
+  <div id="scene-object-choices" class="scene-object-choices" aria-label="Select a featured object"></div>
+  <p class="scene-map-note">Select a numbered object in the scene or use the buttons above.</p><a class="scene-browse-link" href="./demo.html" id="scene-browse">Browse all scene assets in 3D ↗</a>
+  <div class="sr-only"><span id="scene-index">01 / 04</span><span id="scene-title">Indoor</span><span id="scene-subtitle"></span></div>
+  </div>
+  <aside class="scene-inspector" aria-labelledby="scene-object-title">
+   <div class="scene-inspector-heading"><span id="scene-object-context" class="eyebrow">INDOOR</span><h3 id="scene-object-title">Scene close-up</h3></div>
+   <video id="scene-detail-video" controls muted playsinline preload="none" aria-label="Selected object in its native scene"></video>
+   <div class="scene-clip-caption"><span>Camera walkthrough · Native scene motion</span><button id="scene-replay">Replay ↻</button></div>
+   <div class="scene-object-summary"><p id="scene-object-summary"></p><a id="scene-object-3d" href="./demo.html">Open in 3D ↗</a></div>
+   <div class="scene-property-tabs" role="tablist" aria-label="Selected scene object properties"><button role="tab" aria-selected="true" data-scene-property="materials">Materials & physics</button><button role="tab" aria-selected="false" data-scene-property="joints">Joint limits</button></div>
+   <div id="scene-object-properties" class="scene-object-properties" aria-live="polite"></div>
+  </aside>
+ </div><p id="scene-live-status" class="sr-only" role="status"></p>
 </section>
 <section class="stats wrap" aria-label="Dataset at a glance"><div><strong>402,410<span>↗</span></strong><span>articulated assets</span></div><div><strong>531</strong><span>object categories</span></div><div><strong>8,295</strong><span>curated PBR materials</span></div><div><strong>0</strong><span>additional model calls per sample</span></div></section>
 <section class="section wrap" id="explore">

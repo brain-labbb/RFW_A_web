@@ -1,4 +1,5 @@
 import './dataset.js';
+import './scenes.js';
 import './style.css';
 import {scenes,edits,tasks,scaleRows,qualityRows,transferRows} from './data.js';
 const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];
@@ -21,13 +22,13 @@ $('.menu-toggle').addEventListener('click',()=>{const open=$('.header nav').clas
 $$('.header nav a').forEach(a=>a.addEventListener('click',()=>{$('.header nav').classList.remove('open');$('.menu-toggle').setAttribute('aria-expanded','false');}));
 
 const video=$('#scene-video'),scenePlay=$('#scene-play');
-function updateSceneButton(){scenePlay.innerHTML=video.paused?'▶ <span>Play scene</span>':'Ⅱ <span>Pause scene</span>';scenePlay.setAttribute('aria-label',video.paused?'Play scene video':'Pause scene video');}
+function updateSceneButton(){scenePlay.innerHTML=video.paused?'▶ <span>Watch scene</span>':'↩ <span>Explore objects</span>';scenePlay.setAttribute('aria-label',video.paused?'Play scene video':'Pause scene video');}
 video.addEventListener('play',updateSceneButton);video.addEventListener('pause',updateSceneButton);
 scenePlay.addEventListener('click',()=>video.paused?video.play().catch(()=>{}):video.pause());
 $$('[data-scene]').forEach(b=>b.addEventListener('click',()=>{
  const s=b.dataset.scene,data=scenes[s];selectTab($$('[data-scene]'),b);video.pause();video.poster=url(`media/${s}.webp`);video.src=videoUrl(s);video.load();
  $('#scene-index').textContent=`${data.index} / 04`;$('#scene-title').innerHTML=data.title;$('#scene-subtitle').textContent=data.subtitle;video.setAttribute('aria-label',`${s} articulated scene`);
- if(!reduced)video.play().catch(()=>{});updateSceneButton();
+ updateSceneButton();
  setFilter(s);
 }));
 const videoObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(!e.isIntersecting)e.target.pause();}),{threshold:0.05});$$('video').forEach(v=>videoObserver.observe(v));

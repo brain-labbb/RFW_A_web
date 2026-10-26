@@ -86,3 +86,13 @@ Run against the preview server with `TEST_URL=http://127.0.0.1:4174/` if desired
 The dataset test opens all 24 models, checks joint controls and part coloring, and exercises category filters, seed families, sample links, lazy model loading, and mobile layouts. Its reports and screenshots go to `/tmp/rfw-dataset/`.
 
 Design references the section organization of [Artisan](https://physicalvision.github.io/artisan/) and dataset presentation of [Articraft](https://articraft3d.github.io/). Page implementation, assets, authors, and numerical results are specific to RFW-A.
+
+## Scene walkthroughs
+
+`Explore the scenes` now pairs a scene image with selectable object regions and an adjacent camera clip and property panel. Four scene maps expose three featured objects each; all 84 native instances remain available in the interactive demo. Object links open the selected asset directly. Close-ups are rendered from the native scene animation with new cameras, not live physics simulations.
+
+The 12 five-second clips are rendered at 960 × 540, 24 fps with Cycles/OptiX. `scripts/scene_shots.json` records their camera endpoints and native frame ranges. `scripts/render_scene_batch.py final` schedules independent jobs across GPUs 0–7. Render output stays in `/tmp/rfw-scenes/`; `scripts/render_scene_maps.py -- <scene>` creates map images and projects the audited visual-mesh membership into clickable regions. `scripts/finish_scene_media.py` publishes compressed MP4/WebM clips, WebP images, and `public/data/scenes.json`.
+
+For the space scene, `scripts/extend_space_stage.py` joins additional terrain to the existing boundary and replaces the finite star backdrop with a camera-visible panoramic dome using the native procedural material. Earth, asset geometry, rigs, and lighting are retained. These changes exist only in the render copy; the four original scene files are never overwritten. The space map uses native frame 240 to show the assembled scene.
+
+Run `TEST_URL=http://127.0.0.1:4175/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:scenes` to verify all 12 clip selections, playback, materials and joints, map/video switching, mobile layouts, and direct 3D links.

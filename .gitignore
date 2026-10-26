@@ -4,3 +4,4 @@ dist/
 *.log
 offline/
 /tmp/
+__pycache__/

@@ -1,6 +1,21 @@
 {
-  "name": "rfw-a-project-page", "version": "1.0.0", "private": true, "type": "module",
-  "scripts": {"dev": "vite --host 0.0.0.0", "build": "vite build", "preview": "vite preview --host 0.0.0.0", "test": "node scripts/browser-test.mjs", "test:dataset": "node scripts/dataset-test.mjs"},
-  "dependencies": {"three": "0.180.0"},
-  "devDependencies": {"vite": "7.1.12", "playwright": "1.56.1"}
+  "name": "rfw-a-project-page",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node scripts/browser-test.mjs",
+    "test:dataset": "node scripts/dataset-test.mjs",
+    "test:scenes": "node scripts/scenes-test.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.12",
+    "playwright": "1.56.1"
+  }
 }

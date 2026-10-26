@@ -21,7 +21,7 @@ await page.goto(process.env.TEST_URL||'http://127.0.0.1:4173/',{waitUntil:'netwo
 check('All six release buttons are pending',await page.locator('.resource-links button:disabled').count()===6);
 check('No local paper PDF is linked',await page.locator('a[href$=".pdf"]').count()===0);
 for(const s of ['indoor','outdoor','space','laboratory']){
- await page.locator(`[data-scene="${s}"]`).click();await page.waitForFunction(()=>document.querySelector('#scene-video').readyState>=1,{timeout:20000});
+ await page.locator(`[data-scene="${s}"]`).click();await page.waitForFunction(()=>document.querySelector('#scene-map-image').complete&&document.querySelector('#scene-map-image').naturalWidth>0,{timeout:20000});
  check(`${s} scene and asset filter switch`,await page.locator(`[data-scene="${s}"]`).getAttribute('aria-selected')==='true'&&await page.locator(`[data-filter="${s}"]`).getAttribute('aria-pressed')==='true');
 }
 await page.locator('[data-filter="all"]').click();await page.locator('#asset-search').fill('astronaut');check('Asset search finds the helmet',await page.locator('.asset-card').count()===1);await page.locator('.asset-card').click();await page.waitForFunction(()=>window.__viewerReady.includes('helmet'),{timeout:60000});
@@ -30,7 +30,7 @@ await page.evaluate(id=>window.rfw.selectAsset(id),catalog[0].id);await page.loc
 const moved=await page.evaluate(()=>{const v=window.rfw.viewer;const state=()=>{v.model.updateMatrixWorld(true);let a=[];v.model.traverse(o=>a.push(...o.matrixWorld.elements));return JSON.stringify(a);};v.seek(0);const before=state();v.seek(.5);return before!==state();});
 check('Scrubbing changes actual model transforms',moved);
 await page.locator('#motion-play').click();check('Motion play/pause works',await page.locator('#motion-play').getAttribute('aria-label')==='Pause asset motion');await page.locator('#motion-play').click();
-await page.locator('[data-info="materials"]').click();await page.waitForSelector('#material-select');check('Six physical properties render',await page.locator('.physics-grid>div').count()===6);await page.selectOption('#material-select','1');
+await page.locator('[data-info="materials"]').click();await page.waitForSelector('#material-select');check('Six physical properties render',await page.locator('#physics-values>div').count()===6);await page.selectOption('#material-select','1');
 await page.locator('#sample-count').fill('1000');check('Cost calculator uses the paper formula',await page.locator('#our-cost').textContent()==='$0.011');await page.locator('#sample-count').fill('200');
 for(const e of ['component','count','material','size']){
  await page.locator(`[data-edit="${e}"]`).click();await page.locator('[data-variant="3"]').click();await page.waitForFunction(()=>document.querySelector('#edit-after').complete&&document.querySelector('#edit-after').naturalWidth>0);check(`${e} editing variant renders`,await page.locator('[data-variant="3"]').getAttribute('aria-pressed')==='true');
