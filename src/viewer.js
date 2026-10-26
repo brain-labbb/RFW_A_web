@@ -5,7 +5,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 export class AssetViewer {
  constructor(container, onProgress) {
-  this.container=container;this.onProgress=onProgress;this.playing=false;this.token=0;this.duration=0;
+  this.THREE=THREE;this.container=container;this.onProgress=onProgress;this.playing=false;this.token=0;this.duration=0;
   this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#f1f2eb');
   this.camera=new THREE.PerspectiveCamera(35,1,0.01,10000);
   this.renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});

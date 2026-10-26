@@ -2,22 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#f7f7f2"/>
-  <title>RFW-A · Build once. Generate worlds.</title>
+  <meta name="theme-color" content="#ffffff"/>
+  <title>RFW-A · Agentic Procedural Generation of 400K Articulated Assets</title>
   <meta name="description" content="RFW-A: Agentic Procedural Generation of 400K Articulated Assets over 500 Categories. Explore reusable generators, articulated assets, directed editing, and zero-shot sim-to-real transfer."/>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="header"><a class="wordmark" href="#" aria-label="RFW-A home"><span class="brand-symbol">r<span>↗</span></span>RFW–A<span class="brand-small">RESEARCH PROJECT</span></a><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">Menu <span>＋</span></button><nav aria-label="Main navigation"><a href="#worlds">Explore scenes</a><a href="#explore">Interactive demo</a><a href="#method">Method</a><a href="#editing">Editing</a><a href="#validation">Physical validation</a><a href="#benchmark">Benchmark</a><a href="#citation">Citation</a></nav></header>
+<header class="header"><a class="wordmark" href="#" aria-label="RFW-A home"><span class="brand-symbol">r<span>↗</span></span>RFW–A<span class="brand-small">RESEARCH PROJECT</span></a><button class="menu-toggle" aria-label="Open navigation" aria-expanded="false">Menu <span>＋</span></button><nav aria-label="Main navigation"><a href="#dataset">Dataset</a><a href="#worlds">Explore scenes</a><a href="#explore">Interactive demo</a><a href="#method">Method</a><a href="#editing">Editing</a><a href="#validation">Physical validation</a><a href="#benchmark">Benchmark</a><a href="#citation">Citation</a></nav></header>
 <main id="main">
 <section class="intro wrap">
  <div class="eyebrow"><span class="live-dot"></span> AGENTIC INTELLIGENCE. PROCEDURAL SCALE.</div>
  <div class="intro-grid"><h1>RFW-A: Agentic Procedural Generation of 400K Articulated Assets over 500 Categories</h1><div class="intro-aside"><p class="paper-title">RFW-A: Agentic Procedural Generation of<br class="desktop"/> 400K Articulated Assets over 500 Categories</p><p class="intro-copy">A reusable generator-based pipeline for scalable articulated asset generation, physical annotation, directed editing, and robot learning.</p><div class="resource-links" id="resource-links"><button disabled>Paper <span>SOON</span></button><button disabled>Code <span>SOON</span></button><button disabled>Dataset <span>SOON</span></button></div><button class="text-link film-open">Watch the film <span class="play-small">▶</span><span class="muted">02:24</span></button></div></div>
- <div class="authors"><p>Yuanbo Lyu*, Changjian Pan*, Saining Zhang*†, Yi Yang* <span>and collaborators</span></p><div id="author-details"></div></div><details class="hero-abstract"><summary>Read the abstract <span>＋</span></summary><p id="hero-abstract-text"></p></details>
+ <div class="authors"><div id="author-details"></div></div><details class="hero-abstract"><summary>Read the abstract <span>＋</span></summary><p id="hero-abstract-text"></p></details>
 </section>
+<section class="section wrap dataset-section" id="dataset" aria-labelledby="dataset-title">
+ <div class="section-heading"><div><span class="eyebrow">RFW-A-400K</span><h2 id="dataset-title">One generator.<br/>Many articulated assets.</h2></div><p>Agents build reusable category-level programs. Different seeds sample components, resolve their dependencies, and assemble new assets—without another model call.</p></div>
+ <div class="dataset-facts" aria-label="Dataset release statistics"><div><strong>402,410</strong><span>assets in the paper release</span></div><div><strong>531</strong><span>object categories</span></div><div><strong>2.68M</strong><span>parsed links</span></div><div><strong>84.65%</strong><span>assets with multiple movable joints</span></div></div>
+ <div class="dataset-subheading"><div><h3>A selection from the dataset</h3><p>12 representative categories. Select an asset to inspect its parts, materials, and joints.</p></div><label>Filter examples <select id="dataset-domain"><option value="all">All domains</option><option>Home</option><option>Outdoor</option><option>Space</option><option>Tools</option><option>Industry</option><option>Healthcare</option></select></label></div>
+ <div id="dataset-gallery" class="dataset-gallery" aria-live="polite"><p>Loading representative dataset samples…</p></div>
+ <p class="dataset-caption">Curated examples from RFW-A-400K. The gallery is a representative selection, not the full release. Previews are fitted to each asset; they are not shown at a shared physical scale.</p>
+ <div class="family-showcase" aria-labelledby="family-title"><div class="dataset-subheading"><div><h3 id="family-title">Same generator. Different seeds.</h3><p>Each row shares a recorded generator version. Change the category to explore its sampled variations.</p></div></div>
+ <div id="family-tabs" class="pill-tabs" role="tablist" aria-label="Generator family"></div>
+ <div class="family-recipe"><span>Category generator <strong id="family-name"></strong></span><b aria-hidden="true">→</b><span>Sample components & parameters</span><b aria-hidden="true">→</b><span>Resolve dependencies</span><b aria-hidden="true">→</b><span>Assemble assets</span></div>
+ <div id="family-grid" class="family-grid" aria-live="polite"></div>
+ <p id="family-description" class="family-description"></p>
+ <details class="dataset-provenance"><summary>View shared generator version</summary><p>These samples have the same <code>template_sha256</code> in their source appearance records.</p><code id="family-hash"></code></details>
+ </div>
+ <div class="dataset-connections"><article><h3>Sample for diversity</h3><p>Different seeds reuse the same construction logic. The family examples above show the resulting structure and material variation.</p><a href="#method">How generators are constructed →</a></article><article><h3>Edit with intent</h3><p>Specify a component, count, material, or dimension. The program resolves dependent geometry again.</p><a href="#editing">Explore directed editing →</a></article><article><h3>Train with the assets</h3><p>Evaluate the resulting data through articulation estimation and zero-shot sim-to-real manipulation.</p><a href="#benchmark">See downstream results →</a><a href="#sim2real">Watch robot manipulation →</a></article></div>
+</section>
+
 <section class="worlds wrap" id="worlds" aria-label="Four articulated worlds">
- <div class="scene-heading"><div><span class="eyebrow">01 / EXPLORE THE SCENES</span><h2>Four worlds, one generator.</h2></div><p>Browse the environments assembled from RFW-A assets. Select a scene to watch its motion and explore its objects.</p></div>
+ <div class="scene-heading"><div><span class="eyebrow">01 / EXPLORE THE SCENES</span><h2>Explore the scenes</h2></div><p>Browse the environments assembled from RFW-A assets. Select a scene to watch its motion and explore its objects.</p></div>
  <div class="world-stage"><video id="scene-video" muted playsinline loop preload="none" poster="./media/indoor.webp" aria-label="Indoor articulated scene"><source src="./media/indoor.mp4" type="video/mp4"/></video><div class="scene-shade"></div><div class="scene-top"><span class="scene-pill"><span class="live-dot"></span> WORLDS BUILT WITH RFW-A</span><button id="scene-play" class="glass-button" aria-label="Play scene video">▶ <span>Play scene</span></button></div><div class="scene-bottom"><div><span class="mono scene-index" id="scene-index">01 / 04</span><h2 id="scene-title">Everyday spaces.<br/>Extraordinary possibilities.</h2><p id="scene-subtitle">A home filled with objects that open, slide, fold, and turn.</p></div><a href="#explore" class="circle-link" aria-label="Explore scene assets">↗</a></div></div>
  <div class="scene-tabs" role="tablist" aria-label="Select a world"><button role="tab" aria-selected="true" data-scene="indoor"><span class="mono">01</span> Indoor <span class="scene-tab-count">29 assets</span></button><button role="tab" aria-selected="false" data-scene="outdoor"><span class="mono">02</span> Outdoor <span class="scene-tab-count">24 assets</span></button><button role="tab" aria-selected="false" data-scene="space"><span class="mono">03</span> Space <span class="scene-tab-count">10 assets</span></button><button role="tab" aria-selected="false" data-scene="laboratory"><span class="mono">04</span> Laboratory <span class="scene-tab-count">21 assets</span></button></div>
 </section>
@@ -43,5 +59,10 @@
 <footer class="wrap"><a class="wordmark" href="#">RFW–A <span class="brand-small">2026</span></a><p>Project-page inspiration: <a href="https://physicalvision.github.io/artisan/" target="_blank" rel="noopener">Artisan ↗</a><br/>All displayed assets, media, and results are from RFW-A.</p><a class="back-top" href="#">Back to top ↑</a></footer>
 <dialog id="film-dialog" class="media-dialog"><button class="dialog-close" aria-label="Close film">✕</button><video controls playsinline preload="none" poster="./media/film-poster.webp" src="./media/film.mp4"></video></dialog>
 <dialog id="figure-dialog" class="media-dialog figure-dialog"><button class="dialog-close" aria-label="Close figure">✕</button><img alt=""/><p></p></dialog>
+<dialog id="dataset-dialog" class="dataset-dialog" aria-labelledby="dataset-asset-title">
+ <div class="dataset-dialog-header"><div><span class="eyebrow" id="dataset-asset-tag"></span><h2 id="dataset-asset-title">Dataset asset</h2></div><button class="dialog-close" id="dataset-close" aria-label="Close dataset asset">✕</button></div>
+ <div class="dataset-inspector"><div class="dataset-inspector-visual"><div id="dataset-viewer"><p id="dataset-loading" role="status">Loading model…</p><span class="viewer-hint">DRAG TO ROTATE · SCROLL TO ZOOM</span></div><div class="dataset-view-controls"><button id="dataset-reset">Reset view</button><button id="dataset-parts" aria-pressed="false">Show parts</button><button id="dataset-share">Copy sample link</button></div></div>
+ <aside><div id="dataset-asset-facts" class="dataset-asset-facts"></div><label for="dataset-joint">Joint</label><select id="dataset-joint"></select><label for="dataset-joint-value" class="joint-value-label">Position <output id="dataset-joint-output"></output></label><input id="dataset-joint-value" type="range" min="0" max="1000" value="0"/><p class="dataset-caption">Joint controls apply URDF kinematics; they do not run a physics simulation.</p><h3>Surface material classes</h3><div id="dataset-materials"></div><details><summary>Sample record</summary><div id="dataset-sample-record"></div></details></aside></div>
+</dialog>
 <script type="module" src="/src/main.js"></script>
 </body></html>

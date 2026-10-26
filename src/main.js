@@ -1,3 +1,4 @@
+import './dataset.js';
 import './style.css';
 import {scenes,edits,tasks,scaleRows,qualityRows,transferRows} from './data.js';
 const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];

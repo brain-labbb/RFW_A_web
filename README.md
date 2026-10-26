@@ -28,6 +28,7 @@ Replace each `null` with its public HTTPS URL and rebuild. Both sets of resource
 ## Included content
 
 - Four scene videos and the supplied 2:24 film, with MP4 and WebM playback versions.
+- 24 representative dataset samples across 12 categories, with category filtering, four same-generator seed families, and an on-demand 3D inspector for materials, parts, and individual URDF joints.
 - 84 searchable scene asset instances, with browser GLBs, original authored animations, thumbnails, joint metadata, and material properties.
 - Four directed-editing comparisons using existing generator outputs.
 - A generator-cost calculator using the paper's $10.62 authoring estimate and $1.237 per-asset baseline. Compute cost is excluded.
@@ -46,6 +47,7 @@ The 84 instances are a scene showcase, not the full 402,410-asset release. The s
 - `demo.html` / `src/demo.js`: the full-screen Interactive demo opened from the project page.
 - `src/data.js`: page comparison values and editing metadata.
 - `public/data/catalog.json`: 84 native scene asset instances.
+- `public/data/dataset.json` / `src/dataset.js`: representative PV_A_vlm samples and the dataset gallery/inspector.
 - `public/data/physics/`: six physical-property fields per material group.
 - `public/data/resources.json`: release URLs.
 
@@ -64,10 +66,23 @@ Existing source physics records were examined first; 57/84 assets have source-se
 
 ## Validation
 
+### Representative dataset preparation
+
+The showcase reads `/data/oss_bucket_0/yuanbo/PV_A_vlm/assets` without modifying it. `scripts/prepare_dataset.py` records 24 selected seeds, original URDF joint metadata, material classes, and source hashes. The four families share a source-recorded template hash within each category: ceiling fans, drawer cabinets, satellites, and Ferris wheels. The page's release totals come from the paper, not extrapolation from these examples.
+
+`scripts/export_dataset.py` runs in the existing Blender installation and exports source geometry, joint hierarchies, and PBR bindings to GLB. Texture resolution is reduced for the browser; primitive UVs use the exporter mapping. This is a web representation, not the original release format. The inspector applies URDF kinematics, not physics simulation. `scripts/finish_dataset.py` compresses previews and verifies that every exported model preserves its movable joint identities with no missing source textures. Renders and audit reports stay in `/tmp/rfw-dataset/`.
+
+The 24 GLBs total about 69 MB, fetched individually only when a sample is selected. Thumbnail images are lazy loaded. Sample links use `?sample=<sample-id>#dataset`. The full dataset is not bundled or made accessible by this page.
+
+### Browser checks
+
 ```bash
 PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm test
+TEST_URL=http://127.0.0.1:4174/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:dataset
 ```
 
 Run against the preview server with `TEST_URL=http://127.0.0.1:4174/` if desired. The test checks catalog/file coverage, physical-value ranges, pending release buttons, model animation, scene/search/edit controls, result tables, video playback, desktop/mobile layouts, and browser/network errors. The full-screen demo has a separate smoke check for scene filtering, native geometry loading, and material properties. Reports and screenshots go to `/tmp/rfw-web/`.
 
-Design references the section organization of [Artisan](https://physicalvision.github.io/artisan/). Page implementation, visual design, assets, authors, and numerical results are specific to RFW-A.
+The dataset test opens all 24 models, checks joint controls and part coloring, and exercises category filters, seed families, sample links, lazy model loading, and mobile layouts. Its reports and screenshots go to `/tmp/rfw-dataset/`.
+
+Design references the section organization of [Artisan](https://physicalvision.github.io/artisan/) and dataset presentation of [Articraft](https://articraft3d.github.io/). Page implementation, assets, authors, and numerical results are specific to RFW-A.
