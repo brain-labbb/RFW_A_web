@@ -31,7 +31,7 @@ $$('[data-scene]').forEach(b=>b.addEventListener('click',()=>{
 }));
 const videoObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(!e.isIntersecting)e.target.pause();}),{threshold:0.05});$$('video').forEach(v=>videoObserver.observe(v));
 // Dialogs retain native focus trapping and Escape behavior.
-const film=$('#film-dialog');$$('.film-open').forEach(b=>b.addEventListener('click',()=>{film.showModal();film.querySelector('video').play().catch(()=>{});}));film.addEventListener('close',()=>film.querySelector('video').pause());
+const film=$('#film-dialog');$$('.film-open').forEach(b=>b.addEventListener('click',()=>{film.showModal();film.querySelector('video').play().catch(()=>{});}));film.addEventListener('close',()=>film.querySelector('video').pause());film.addEventListener('cancel',()=>film.querySelector('video').pause());
 $$('dialog').forEach(d=>{d.querySelector('.dialog-close').addEventListener('click',()=>d.close());d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});});
 $$('[data-lightbox]').forEach(b=>b.addEventListener('click',()=>{const d=$('#figure-dialog');d.querySelector('img').src=url(b.dataset.lightbox);d.querySelector('img').alt=b.dataset.caption;d.querySelector('p').textContent=b.dataset.caption;d.showModal();}));
 
