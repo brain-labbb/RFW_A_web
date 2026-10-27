@@ -19,24 +19,23 @@ are used inside the workflow.
    with a blue-gray coating. All use the same view and metric display scale.
    These are illustrative method examples, not six recorded experimental trials;
    the video gallery remains unchanged. Door angle is 0.98 radians.
-3. **Simulation training**: a shaded Cycles view with the dark Piper finish used
-   in the simulation USD. Frame 900 supplies the native left-Piper joint state and
-   opening angle. Cabinet scale remains 0.66, matching the simulation. The
-   background is clean white, with no tabletop, floor grid or contact shadow.
-4. **Real-world deployment**: a shaded deployment schematic with a dark right
-   Piper and a yellow target cabinet made 28% shorter at the user's request.
-   Radius and knob dimensions are preserved. The source frame-1800 forearm is
-   translated down by the changed handle height (about 53 mm), maintaining contact.
-   This is an illustration, not a recovered real-world pose or experimental image.
-   Actual real trials remain in the video gallery immediately below it.
+3. **Simulation training**: a blue-gray Piper with a fine blue mesh overlay,
+   standing over a blue simulation ground grid. These are user-requested visual
+   cues, not literal materials from the experiment videos. Frame 900 supplies
+   the native left-Piper joint state and opening angle. Cabinet scale is 0.66.
+4. **Real-world deployment**: a near-black right Piper, shorter yellow cabinet,
+   plain background and soft contact shadow. The target is 28% shorter, preserving
+   radius and knob dimensions; the arm is translated down about 53 mm to retain
+   handle contact. This is a rendered schematic, not a recovered real-world pose.
 
-Both robot panels use the same orthographic scale and dark hardware color.
-Simulation shows the taller cabinet and the left arm opening it against a clean
-white background. Deployment shows the shorter cabinet, right arm closing it,
-a higher opposite-side camera angle and a soft contact shadow. Neither has a
-visible tabletop or floor grid. An invisible shadow catcher is used only for
-deployment. The idle arm is hidden; proximal deployment-arm parts outside the
-focus area are hidden. Both remain rendered illustrations.
+Both panels use the same orthographic scale. Simulation has a taller target and
+blue grid/mesh cues; deployment uses a shorter target and darker hardware from a
+higher opposite-side viewpoint. Neither has a table. The deployment floor is an
+invisible shadow catcher. Actual real trials remain in the video gallery below.
+
+Retrieve and Edit retain visible circular matte-gray trays. The selected retrieval
+candidate has a blue-gray tray, dark perimeter ring and thick dark corner brackets.
+All panel backgrounds are a restrained light gray (#f3f5f6), rather than pure white.
 
 ### Color reproduction
 
@@ -44,11 +43,13 @@ The previous Workbench view overrode the robot with a light gray and flattened
 its appearance. This has been removed. The original Collada geometry is retained,
 but its white/gray material palette also differs from the experiment: inspection
 of the composed Piper USD shows all 16 shaders use `diffuse_color_constant`
-(0.018, 0.022, 0.028). Both panels use that dark finish in Cycles.
+(0.018, 0.022, 0.028). The current user-requested diagram differentiates simulation
+with blue-gray (0.035, 0.075, 0.12) and deployment with near-black
+(0.006, 0.008, 0.011); these are documented illustration finishes.
 
 Simply importing the cabinet USD did not reproduce Isaac's displayed yellow:
 the previous AgX/studio combination made it olive-brown. All four panels now use
-Khronos PBR Neutral, exposure +0.5 and neutral lighting. The yellow coating alone
+Khronos PBR Neutral and neutral lighting. Exposure is +0.1 for all four panels to preserve detail and prevent washed-out trays. The yellow coating alone
 has an explicitly recorded Blender display calibration from linear RGB
 (0.23, 0.19, 0.045) to (0.27, 0.265, 0.085), judged against the delivered cabinet
 video. This is a rendering compensation; the source USD and videos are untouched.

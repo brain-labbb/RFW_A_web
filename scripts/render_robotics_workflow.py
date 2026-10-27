@@ -218,7 +218,12 @@ def camera(direction, target=(0, 0, 0), scale=3.65):
 
 
 WHITE = material('Porcelain', (.91, .92, .93), roughness=.72)
-EDGE = material('Selected asset', (.28, .36, .35), roughness=.6)
+TRAY = material('Visible matte gray trays', (.30, .33, .35), roughness=.85)
+SELECTED_TRAY = material('Selected blue gray tray', (.10, .23, .29), roughness=.75)
+EDGE = material('Selected asset', (.018, .095, .14), roughness=1)
+edge_shader = EDGE.node_tree.nodes.new('ShaderNodeEmission')
+edge_shader.inputs['Color'].default_value = (.018, .095, .14, 1)
+EDGE.node_tree.links.new(edge_shader.outputs[0], EDGE.node_tree.nodes.get('Material Output').inputs['Surface'])
 
 
 def cabinet(variant='crown_molding', q=.98):
@@ -298,8 +303,8 @@ def tile(root, meshes, sx, sy, right, up, size=.8, fixed_scale=None, selected=Fa
     # A small local plinth catches light under each item without a busy background.
     cx, cy = ((lo + hi) / 2)[:2]
     radius = max(hi.x - lo.x, hi.y - lo.y) * .62
-    bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=radius, depth=.018, location=(cx, cy, lo.z - .014))
-    bpy.context.object.data.materials.append(WHITE)
+    bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=radius, depth=.034, location=(cx, cy, lo.z - .018))
+    bpy.context.object.data.materials.append(SELECTED_TRAY if selected else TRAY)
     if selected:
         pts = [(cx + radius * math.cos(i * 2 * math.pi / 128), cy + radius * math.sin(i * 2 * math.pi / 128), lo.z) for i in range(129)]
         line('Retrieved cabinet highlight', pts, EDGE, .014)
@@ -340,7 +345,7 @@ def retrieval():
     forward = cam.location.normalized() * 2
     for xsign, ysign in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
         points = [(xsign * .48, ysign * .38), (xsign * .48, ysign * .52), (xsign * .34, ysign * .52)]
-        line('Selected candidate', [forward + right*x + up*y for x, y in points], EDGE, .008)
+        line('Selected candidate', [forward + right*x + up*y for x, y in points], EDGE, .013)
 
 
 def edits():
@@ -422,7 +427,8 @@ def robot_scene(deploy=False):
     knob_origin = source_xml.find("link[@name='curved_door']/visual[@name='knob_cap']/origin")
     handle_height = vec(knob_origin.get('xyz'))[2]
     arm_offset = .66 * handle_height * (height_scale - 1)
-    hardware = material('Native Isaac Piper finish', (.018, .022, .028), .0, .5)
+    hardware_rgb = (.006, .008, .011) if deploy else (.035, .075, .12)
+    hardware = material('Dark physical hardware' if deploy else 'Blue simulation hardware', hardware_rgb, .12, .45)
     for side, arm in p['arms'].items():
         joints = dict(zip(['joint' + str(i) for i in range(1, 7)], arm['joint_pos_rad']))
         joints.update(dict(zip(['gripper', 'gripper_joint1', 'gripper_joint2'], arm['gripper_joint_pos_m'])))
@@ -462,14 +468,41 @@ def robot_scene(deploy=False):
                     matrix[2][j] /= height_scale
                 ob.matrix_world = matrix
         bpy.context.view_layer.update()
-    # No visible tabletop or grid. Deployment alone has a soft contact shadow
-    # on an invisible catcher to distinguish it from the clean simulation view.
+    # Simulation grid and blue mesh overlay are schematic visual cues.
+    # Deployment keeps a plain background and soft contact shadow.
     if deploy:
         bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
         floor = bpy.context.object
         floor.name = 'Invisible deployment shadow catcher'
         floor.is_shadow_catcher = True
         floor.data.materials.append(WHITE)
+    else:
+        grid = material('Blue simulation grid', (.025, .09, .18), roughness=1)
+        shader = grid.node_tree.nodes.new('ShaderNodeEmission')
+        shader.inputs['Color'].default_value = (.035, .12, .23, 1)
+        grid.node_tree.links.new(shader.outputs[0], grid.node_tree.nodes.get('Material Output').inputs['Surface'])
+        bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .736))
+        bpy.context.object.name = 'Simulation ground, no tabletop'
+        bpy.context.object.data.materials.append(material('Cool simulation ground', (.46, .55, .63), roughness=.9))
+        for i in range(-20, 21):
+            v = i * .05
+            line('Simulation grid X', [(v, -1, .738), (v, 1, .738)], grid, .00065)
+            line('Simulation grid Y', [(-1, v, .738), (1, v, .738)], grid, .00065)
+        for ob in list(bpy.context.scene.objects):
+            if ob.type == 'MESH' and ob.get('link_name') and not ob.get('workflow_cabinet') and not ob.hide_render:
+                overlay = ob.copy()
+                overlay.data = ob.data.copy()
+                bpy.context.collection.objects.link(overlay)
+                overlay.name = 'Simulation topology ' + ob.name
+                overlay.data.materials.clear()
+                overlay.data.materials.append(grid)
+                dec = overlay.modifiers.new('Readable topology', 'DECIMATE')
+                dec.ratio = .06
+                wire = overlay.modifiers.new('Blue mesh edges', 'WIREFRAME')
+                wire.thickness = .00035
+                wire.use_even_offset = False
+                wire.use_relative_offset = False
+                wire.offset = 1
     motion_arrow(raw[:3], opening=not deploy)
     camera((-3.0, 2.0, 2.5) if deploy else (-3.0, -.9, 1.8),
            target=(.30, .025, .90 if deploy else .945), scale=.70)
@@ -477,13 +510,13 @@ def robot_scene(deploy=False):
     audit['contact_shadow'] = deploy
     audit['illustration_only'] = True
     audit['cabinet_finish'] = 'native video USD materials with documented Blender display calibration'
-    audit['simulation_grid'] = False
+    audit['simulation_grid'] = not deploy
     audit['cabinet_height_scale'] = height_scale
     audit['active_arm_presentation_translation_m'] = [0, 0, arm_offset]
     audit['presentation_style'] = 'physical deployment schematic' if deploy else 'shaded simulation schematic'
-    audit['robot_finish'] = 'Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)'
+    audit['robot_finish'] = 'darker physical schematic' if deploy else 'blue simulation mesh schematic'
     audit['robot_material_source'] = '/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd'
-    audit['robot_diffuse_linear_rgb'] = [.018, .022, .028]
+    audit['robot_diffuse_linear_rgb'] = list(hardware_rgb)
     audit['target_material_source'] = '/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda'
 
 
@@ -518,7 +551,7 @@ scene.render.resolution_y = scene.render.resolution_x
 scene.render.resolution_percentage = 100
 scene.render.film_transparent = True
 scene.view_settings.view_transform = 'Khronos PBR Neutral'
-scene.view_settings.exposure = .5
+scene.view_settings.exposure = .1
 scene.render.image_settings.file_format = 'PNG'
 scene.render.image_settings.color_mode = 'RGBA'
 scene.render.filepath = str(OUT / (args.panel + '.png'))

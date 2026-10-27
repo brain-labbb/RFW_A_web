@@ -39,6 +39,7 @@ def frame(canvas, i, x, y, mobile=False):
     draw = ImageDraw.Draw(canvas)
     font = ImageFont.truetype(FONT, 46 if mobile else 42)
     draw.text((x+SIZE/2, y-54), TITLES[i], font=font, fill=INK, anchor='mm')
+    draw.rounded_rectangle((x, y, x+SIZE, y+SIZE), radius=7, fill='#f3f5f6')
     source = Image.open(TMP / (PANELS[i] + '.png')).convert('RGBA')
     if source.size != (1280, 1280):
         raise ValueError('Final-quality 1280px render required: ' + PANELS[i])
