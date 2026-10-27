@@ -1,4 +1,6 @@
-# Robotics workflow image
+# Archived robotics workflow image
+
+Superseded by native Blender renders. See `../robotics-workflow/README.md`; this generated image is no longer used on the website.
 
 Generated with gpt-image-2 through the bundled imagegen CLI (API fallback), using the existing locally configured provider and credentials. No credentials are stored in the repository.
 

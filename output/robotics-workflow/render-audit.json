@@ -1,0 +1,148 @@
+{
+  "panels": [
+    {
+      "panel": "retrieve",
+      "sources": [
+        "public/models/dataset/satellite_with_articulated_solar_panels__0000.glb",
+        "public/models/dataset/Handtools_Paint_roller__0000.glb",
+        "public/models/dataset/Astronomy_Mars_rover__0000.glb",
+        "public/models/dataset/drawer_cabinet_with_sliding_drawers__0000.glb",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
+        "public/models/dataset/Healthcare_Prosthetic_limb__0000.glb",
+        "public/models/dataset/sewing_machine__0000.glb",
+        "public/models/dataset/Playground_swing__0000.glb",
+        "public/models/dataset/Industrial_Drill_press_table__0000.glb"
+      ],
+      "edits": [],
+      "robot_pose_checks": {},
+      "render": {
+        "blender": "4.2.21 LTS",
+        "samples": 128,
+        "devices": [
+          "NVIDIA GeForce RTX 4090"
+        ]
+      }
+    },
+    {
+      "panel": "edit",
+      "sources": [
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+      ],
+      "edits": [
+        {
+          "edit": "height",
+          "scale": [
+            1,
+            1,
+            1.28
+          ]
+        },
+        {
+          "edit": "radius",
+          "scale": [
+            1.3,
+            1.3,
+            1
+          ]
+        },
+        {
+          "handle_source": "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.py",
+          "radial_offset_m": 0.025
+        },
+        {
+          "edit": "handle",
+          "handle": "t_bar"
+        },
+        {
+          "edit": "material",
+          "gold": true
+        }
+      ],
+      "robot_pose_checks": {},
+      "render": {
+        "blender": "4.2.21 LTS",
+        "samples": 128,
+        "devices": [
+          "NVIDIA GeForce RTX 4090"
+        ]
+      }
+    },
+    {
+      "panel": "train",
+      "sources": [
+        "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
+        "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+      ],
+      "edits": [],
+      "robot_pose_checks": {
+        "left": {
+          "gripper_base": 3.240788455446295e-07,
+          "gripper_link1": 3.332000937312528e-08,
+          "gripper_link2": 5.3726900748371916e-08
+        },
+        "right": {
+          "gripper_base": 4.835421067353473e-07,
+          "gripper_link1": 4.012260442327338e-08,
+          "gripper_link2": 1.4901161193847656e-08
+        }
+      },
+      "pose_source": "/opt/isaacsim/end/real_sim_fixed_camera_20261014/round_cabinet/round_cabinet_fixed_camera.jsonl",
+      "pose_frame": 700,
+      "illustration_only": true,
+      "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+      "render": {
+        "blender": "4.2.21 LTS",
+        "samples": 128,
+        "devices": [
+          "NVIDIA GeForce RTX 4090"
+        ]
+      }
+    },
+    {
+      "panel": "deploy",
+      "sources": [
+        "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
+        "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
+        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+      ],
+      "edits": [],
+      "robot_pose_checks": {
+        "left": {
+          "gripper_base": 3.240788455446295e-07,
+          "gripper_link1": 3.332000937312528e-08,
+          "gripper_link2": 5.3726900748371916e-08
+        },
+        "right": {
+          "gripper_base": 4.835421067353473e-07,
+          "gripper_link1": 4.012260442327338e-08,
+          "gripper_link2": 1.4901161193847656e-08
+        }
+      },
+      "pose_source": "/opt/isaacsim/end/real_sim_fixed_camera_20261014/round_cabinet/round_cabinet_fixed_camera.jsonl",
+      "pose_frame": 700,
+      "illustration_only": true,
+      "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+      "render": {
+        "blender": "4.2.21 LTS",
+        "samples": 128,
+        "devices": [
+          "NVIDIA GeForce RTX 4090"
+        ]
+      }
+    }
+  ],
+  "max_fk_position_error_m": 4.835421067353473e-07,
+  "desktop_dimensions": [
+    2854,
+    742
+  ],
+  "mobile_dimensions": [
+    1394,
+    1612
+  ]
+}
