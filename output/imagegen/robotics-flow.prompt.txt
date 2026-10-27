@@ -1,0 +1,19 @@
+Use case: infographic-diagram
+Asset type: A compact illustrated workflow replacing the subtitle beneath “Robotic manipulation” on the RFW-A research project website.
+Primary request: Create one horizontal four-stage scientific workflow, linked by three thin right-pointing arrows. Explain retrieval of articulated assets, optional procedural editing, simulation-only policy training, and zero-shot real-world deployment.
+Style/medium: Refined academic diagram with small restrained grayscale technical illustrations, crisp edges, generous whitespace, and clean sans-serif typography. Pure white background; charcoal text and light-gray dividers. Match a minimal black-and-white research website.
+Composition: Wide 3:1 canvas, four equally spaced stages in one row. Each stage has a small illustration above its title and one short line below. All arrows run left to right. Keep the central artwork compact with tidy outer margins. No overall title, footer, section numbers, or surrounding card.
+Stage 1 illustration: A small collection of articulated cabinet assets with one selected for a real target.
+Stage 1 exact title: “Retrieve”
+Stage 1 exact supporting text: “RFW-A-400K”
+Stage 2 illustration: Three related cabinet variants showing controlled changes in proportions and handle placement.
+Stage 2 exact title: “Edit (optional)”
+Stage 2 exact supporting text: “Procedural parameters”
+Stage 3 illustration: Robot arms manipulating a cabinet inside a clearly schematic simulation environment.
+Stage 3 exact title: “Train in simulation”
+Stage 3 exact supporting text: “500 demos per task”
+Stage 4 illustration: The trained robot manipulating the corresponding physical cabinet, using the same technical illustration style, not a fabricated experimental photograph.
+Stage 4 exact title: “Deploy zero-shot”
+Stage 4 exact supporting text: “No real-world fine-tuning”
+Scientific constraints: Editing is optional. Training occurs only in simulation. There is no real-world training stage and no feedback arrow from the real world into training. Do not depict the illustrative asset variants as experimental result groups. Do not add success percentages or performance claims.
+Avoid: Serif fonts, gradients, colorful backgrounds, neon accents, heavy shadows, decorative frames, dense explanatory text, photorealistic fake experimental evidence, watermarks, logos, extra arrows, extra stages.
