@@ -20,19 +20,25 @@ version. Desktop and mobile WebP assets are composed from the same four panels.
    exposing the interior while remaining inside the original 102° door travel.
    The native T-bar dimensions are translated radially by 25 mm to match this
    cabinet. These are presentation edits, not new evaluated training samples.
-3. **Simulation training**: a close-up of the left Piper arm pushing the yellow
-   cabinet open. Pose and door state come from simulation frame 900. The cabinet
-   scale is 0.66, exactly as in `isaac_route/common/sim_asset.py`. An arc around
-   the real door axis shows the opening motion; there is no ground grid.
-4. **Real-world deployment**: a close-up of the right Piper arm pushing the yellow
-   target cabinet closed, with a reversed motion arrow and a graphite hardware
-   finish. It uses simulation frame 1800 as the pose for a deployment illustration;
-   it is not a recovered real-world robot pose, photograph, or real trial.
-   The actual real-world recordings remain immediately below the workflow.
+3. **Simulation training**: the taller cabinet is presented as a flat-lit CAD
+   viewport, with component contours and cavity shading. The original left Piper
+   pose and door angle come from simulation frame 900, with cabinet scale 0.66.
+   Workbench display colors preserve the yellow cabinet / light robot identity;
+   there is no floor grid or studio contact shadow. The motion arc still shows opening.
+4. **Real-world deployment**: the yellow target is 28% shorter while retaining
+   its radius and the original knob dimensions. The right Piper forearm uses the
+   frame-1800 simulation pose, translated downward by the change in handle height
+   (about 53 mm) so its contact remains aligned. A slightly higher camera, complete
+   PBR shading and contact shadows provide a physical deployment schematic.
+   Both robot panels use the same orthographic scale, preserving the visible size
+   difference rather than enlarging the shorter cabinet to fill the frame.
+   This is not a recovered real-world pose, photograph or real trial. Actual
+   real-world recordings remain immediately below the workflow.
 
 The two close-ups illustrate two phases of the same open/close task, not different
 training and deployment task definitions. Only the working arm is visible; its
-native pose and distal geometry are preserved and the idle arm is hidden. The
+source joint angles and distal geometry are preserved and the idle arm is hidden.
+The deployment forearm has the explicitly recorded presentation translation above. The
 deployment view also hides the base and two proximal links where they otherwise
 intrude at the bottom-right edge. The close framing gives the object and gripper
 most of the image area.
@@ -45,8 +51,8 @@ branch; it does not redefine all three experimental training conditions.
 - Cabinet: `/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf`.
 - Handle: `/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.py` and `model.urdf`.
 - Robot: `/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf`;
-  original Collada geometry is imported intact; the simulation panel retains the
-  source robot materials and the deployment schematic uses a graphite finish.
+  original Collada geometry is imported intact; the simulation panel uses a flat light-gray viewport palette and the
+  deployment schematic uses a graphite finish.
 - Robot pose: `/opt/isaacsim/end/real_sim_fixed_camera_20261014/round_cabinet/round_cabinet_fixed_camera.jsonl`.
 - Dataset pool: existing native exports under `public/models/dataset/`, with their
   source provenance in `public/data/dataset.json`.
@@ -75,7 +81,9 @@ CUDA_VISIBLE_DEVICES=0 /tmp/blender-4.2.21-linux-x64/blender -b -t 8 \
 python scripts/compose_robotics_workflow.py
 ```
 
-Final renders use Cycles OptiX, 128 samples and denoising, at 1280 × 1280 per panel.
+Final panels are 1280 × 1280. Retrieval, edits and deployment use Cycles OptiX
+with 128 samples and denoising; the simulation panel uses Workbench with 32-sample
+antialiasing, flat illumination, material display colors and cavity contours.
 Temporary PNGs, Blender scenes and logs live in `/tmp/rfw-workflow`. Composition
 writes `public/media/robotics-flow.webp` (2854 × 742) and
 `public/media/robotics-flow-mobile.webp` (1394 × 1612). The mobile return arrow
@@ -91,5 +99,6 @@ The enlarged image viewer has no visible caption below the picture; accessible
 image descriptions remain available as alt text.
 
 The last two headings explicitly distinguish simulation training and real-world
-deployment. Both cabinets share the target yellow material; the robot finishes
-remain light in simulation and graphite in the deployment schematic.
+deployment. Both cabinets retain the target yellow material identity. The simulation panel
+uses a lighting-independent viewport display color, while the deployment schematic
+uses the original PBR shader. Robot finishes remain light versus graphite.

@@ -52,6 +52,7 @@ def empty(name, parent=None, matrix=None):
 def material(name, color, metallic=0, roughness=.5):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
+    m.diffuse_color = (*color[:3], 1)
     bs = m.node_tree.nodes.get('Principled BSDF')
     bs.inputs['Base Color'].default_value = (*color[:3], 1)
     bs.inputs['Metallic'].default_value = metallic
@@ -404,6 +405,11 @@ def robot_scene(deploy=False):
     audit['pose_frame'] = frame
     audit['visible_arm'] = active_side
     audit['motion_phase'] = 'closing' if deploy else 'opening'
+    height_scale = .72 if deploy else 1.0
+    source_xml = ET.parse(SOURCE / 'crown_molding/model.urdf').getroot()
+    knob_origin = source_xml.find("link[@name='curved_door']/visual[@name='knob_cap']/origin")
+    handle_height = vec(knob_origin.get('xyz'))[2]
+    arm_offset = .66 * handle_height * (height_scale - 1)
     graphite = material('Deployment hardware finish', (.025, .031, .035), .3, .37)
     for side, arm in p['arms'].items():
         joints = dict(zip(['joint' + str(i) for i in range(1, 7)], arm['joint_pos_rad']))
@@ -419,6 +425,9 @@ def robot_scene(deploy=False):
             links[name].matrix_world = Matrix.Translation(Vector(raw[:3])) @ Quaternion(raw[3:]).to_matrix().to_4x4()
             bpy.context.view_layer.update()
         audit['robot_pose_checks'][side] = checks
+        if deploy and side == active_side:
+            root.location.z += arm_offset
+            bpy.context.view_layer.update()
         for ob in meshes:
             # Only the working arm is needed in the close-up. The second arm's
             # recorded pose is still audited, but its idle gripper is hidden.
@@ -428,19 +437,36 @@ def robot_scene(deploy=False):
     root, meshes, _ = cabinet(q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
     finish_cabinet(meshes, 'target')
     raw = p['mechanism_roots']['round_cabinet_crown_molding']
-    root.location, root.scale = raw[:3], (.66,) * 3
+    root.location, root.scale = raw[:3], (.66, .66, .66 * height_scale)
     root.rotation_mode = 'QUATERNION'
     root.rotation_quaternion = Quaternion(raw[3:])
+    bpy.context.view_layer.update()
+    if deploy:
+        for ob in meshes:
+            if ob.get('visual_name', '').startswith(('knob_', 'tbar_')):
+                # Lower hardware with the shortened body but retain its original
+                # dimensions, rather than squashing the round knob vertically.
+                matrix = ob.matrix_world.copy()
+                for j in range(3):
+                    matrix[2][j] /= height_scale
+                ob.matrix_world = matrix
+        bpy.context.view_layer.update()
     # Contact shadows ground the close-up, without a large table or legs that
-    # compete with the action. No source geometry or recorded pose is altered.
+    # compete with the action. The deployment height and active forearm offset
+    # are presentation changes, not a reconstruction of real experiment poses.
     bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
     floor = bpy.context.object;floor.name = 'Contact shadow plane'
     floor.is_shadow_catcher = True;floor.data.materials.append(WHITE)
+    floor.hide_render = not deploy
     motion_arrow(raw[:3], opening=not deploy)
-    camera((-3.0, 2.0, 1.8) if deploy else (-3.0, -.9, 1.8), target=(.30, .025, .945), scale=.70)
+    camera((-3.0, 2.0, 2.5) if deploy else (-3.0, -.9, 1.8),
+           target=(.30, .025, .90 if deploy else .945), scale=.70)
     audit['illustration_only'] = True
     audit['cabinet_finish'] = 'target'
     audit['simulation_grid'] = False
+    audit['cabinet_height_scale'] = height_scale
+    audit['active_arm_presentation_translation_m'] = [0, 0, arm_offset]
+    audit['presentation_style'] = 'physical deployment schematic' if deploy else 'technical viewport'
     audit['robot_finish'] = 'graphite presentation finish' if deploy else 'original Collada materials'
     audit['target_material_source'] = '/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda'
 
@@ -448,7 +474,27 @@ def robot_scene(deploy=False):
 
 {'retrieve': retrieval, 'edit': edits, 'train': lambda: robot_scene(False), 'deploy': lambda: robot_scene(True)}[args.panel]()
 scene = bpy.context.scene
-scene.render.engine = 'CYCLES'
+scene.render.engine = 'BLENDER_WORKBENCH' if args.panel == 'train' else 'CYCLES'
+if args.panel == 'train':
+    shading = scene.display.shading
+    shading.light = 'FLAT'
+    # Match the yellow asset identity in a lighting-independent CAD display.
+    GOLD.diffuse_color = (.56, .47, .19, 1)
+    for obj in scene.objects:
+        if obj.type == 'MESH' and obj.get('link_name', '').startswith(('link', 'base_', 'gripper', 'flange')):
+            for mat in obj.data.materials:
+                mat.diffuse_color = (.30, .34, .38, 1)
+    shading.color_type = 'MATERIAL'
+    shading.show_shadows = False
+    shading.show_cavity = True
+    shading.cavity_type = 'WORLD'
+    shading.cavity_ridge_factor = 1.2
+    shading.cavity_valley_factor = 1.4
+    shading.curvature_ridge_factor = 1.2
+    shading.curvature_valley_factor = 1.0
+    shading.show_object_outline = True
+    shading.object_outline_color = (.06, .08, .09)
+    scene.display.render_aa = '32'
 scene.cycles.samples = 24 if args.preview else 128
 scene.cycles.use_denoising = True
 prefs = bpy.context.preferences.addons['cycles'].preferences
@@ -479,7 +525,7 @@ scene.view_settings.view_transform = 'AgX'
 scene.render.image_settings.file_format = 'PNG'
 scene.render.image_settings.color_mode = 'RGBA'
 scene.render.filepath = str(OUT / (args.panel + '.png'))
-audit['render'] = {'blender': bpy.app.version_string, 'samples': scene.cycles.samples, 'devices': [d.name for d in prefs.devices if d.use]}
+audit['render'] = {'blender': bpy.app.version_string, 'engine': scene.render.engine, 'samples': 32 if args.panel == 'train' else scene.cycles.samples, 'devices': ['OpenGL/EGL viewport'] if args.panel == 'train' else [d.name for d in prefs.devices if d.use]}
 (OUT / (args.panel + '.json')).write_text(json.dumps(audit, indent=2))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT / (args.panel + '.blend')))
 bpy.ops.render.render(write_still=True)

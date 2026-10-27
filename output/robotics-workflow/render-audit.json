@@ -117,13 +117,21 @@
       "illustration_only": true,
       "cabinet_finish": "target",
       "simulation_grid": false,
+      "cabinet_height_scale": 1.0,
+      "active_arm_presentation_translation_m": [
+        0,
+        0,
+        0.0
+      ],
+      "presentation_style": "technical viewport",
       "robot_finish": "original Collada materials",
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
-        "samples": 128,
+        "engine": "BLENDER_WORKBENCH",
+        "samples": 32,
         "devices": [
-          "NVIDIA GeForce RTX 4090"
+          "OpenGL/EGL viewport"
         ]
       }
     },
@@ -153,10 +161,19 @@
       "motion_phase": "closing",
       "illustration_only": true,
       "cabinet_finish": "target",
+      "simulation_grid": false,
+      "cabinet_height_scale": 0.72,
+      "active_arm_presentation_translation_m": [
+        0,
+        0,
+        -0.0534072
+      ],
+      "presentation_style": "physical deployment schematic",
       "robot_finish": "graphite presentation finish",
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
+        "engine": "CYCLES",
         "samples": 128,
         "devices": [
           "NVIDIA GeForce RTX 4090"
