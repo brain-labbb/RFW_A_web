@@ -41,10 +41,25 @@
           "textures": []
         }
       ],
+      "yellow_display_calibration": {
+        "source_linear_rgb": [
+          0.23,
+          0.19,
+          0.045
+        ],
+        "blender_linear_rgb": [
+          0.27,
+          0.265,
+          0.085
+        ],
+        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
+      },
       "render": {
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
+        "view_transform": "Khronos PBR Neutral",
+        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]
@@ -353,6 +368,8 @@
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
+        "view_transform": "Khronos PBR Neutral",
+        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]
@@ -407,8 +424,36 @@
           "textures": []
         }
       ],
+      "yellow_display_calibration": {
+        "source_linear_rgb": [
+          0.23,
+          0.19,
+          0.045
+        ],
+        "blender_linear_rgb": [
+          0.27,
+          0.265,
+          0.085
+        ],
+        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
+      },
+      "tabletop": {
+        "center_m": [
+          0.32,
+          0.02,
+          0.7
+        ],
+        "size_m": [
+          1.36,
+          1.08,
+          0.08
+        ],
+        "top_m": 0.74,
+        "material": "native simulation backdrop gray",
+        "real_world_geometry": "illustrative, not measured"
+      },
       "illustration_only": true,
-      "cabinet_finish": "native video USD materials",
+      "cabinet_finish": "native video USD materials with documented Blender display calibration",
       "simulation_grid": false,
       "cabinet_height_scale": 1.0,
       "active_arm_presentation_translation_m": [
@@ -416,15 +461,23 @@
         0,
         0.0
       ],
-      "presentation_style": "technical viewport",
-      "robot_finish": "original Collada materials",
+      "presentation_style": "shaded simulation schematic",
+      "robot_finish": "Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)",
+      "robot_material_source": "/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd",
+      "robot_diffuse_linear_rgb": [
+        0.018,
+        0.022,
+        0.028
+      ],
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
-        "engine": "BLENDER_WORKBENCH",
-        "samples": 32,
+        "engine": "CYCLES",
+        "samples": 128,
+        "view_transform": "Khronos PBR Neutral",
+        "exposure": 0.5,
         "devices": [
-          "OpenGL/EGL viewport"
+          "NVIDIA GeForce RTX 4090"
         ]
       }
     },
@@ -477,8 +530,36 @@
           "textures": []
         }
       ],
+      "yellow_display_calibration": {
+        "source_linear_rgb": [
+          0.23,
+          0.19,
+          0.045
+        ],
+        "blender_linear_rgb": [
+          0.27,
+          0.265,
+          0.085
+        ],
+        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
+      },
+      "tabletop": {
+        "center_m": [
+          0.32,
+          0.02,
+          0.7
+        ],
+        "size_m": [
+          1.36,
+          1.08,
+          0.08
+        ],
+        "top_m": 0.74,
+        "material": "native simulation backdrop gray",
+        "real_world_geometry": "illustrative, not measured"
+      },
       "illustration_only": true,
-      "cabinet_finish": "native video USD materials",
+      "cabinet_finish": "native video USD materials with documented Blender display calibration",
       "simulation_grid": false,
       "cabinet_height_scale": 0.72,
       "active_arm_presentation_translation_m": [
@@ -487,12 +568,20 @@
         -0.0534072
       ],
       "presentation_style": "physical deployment schematic",
-      "robot_finish": "graphite presentation finish",
+      "robot_finish": "Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)",
+      "robot_material_source": "/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd",
+      "robot_diffuse_linear_rgb": [
+        0.018,
+        0.022,
+        0.028
+      ],
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
+        "view_transform": "Khronos PBR Neutral",
+        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]

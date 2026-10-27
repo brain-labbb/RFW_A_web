@@ -15,24 +15,43 @@ are used inside the workflow.
    and `t_bar`, with their native light wood finishes, proportions, handles and
    interiors. The retrieved cabinet and these four assets are displayed at a
    door angle of 0.98 radians (about 56° of the native 102° travel).
-3. **Simulation training**: the original tall yellow cabinet in a flat-lit
-   Workbench viewport, with light-gray robot parts and component contours.
-   Frame 900 supplies the native left-Piper joint state and opening angle.
-   Cabinet scale is 0.66, matching the simulation. There is no ground grid.
-4. **Real-world deployment**: a shaded deployment schematic with a graphite
-   right Piper and a yellow target cabinet made 28% shorter at the user's request.
+3. **Simulation training**: a shaded Cycles view with the dark Piper finish used
+   in the simulation USD. Frame 900 supplies the native left-Piper joint state and
+   opening angle. Cabinet scale remains 0.66, matching the simulation. A finite
+   tabletop replaces the ungrounded flat-gray viewport. There is no ground grid.
+4. **Real-world deployment**: a shaded deployment schematic with a dark right
+   Piper and a yellow target cabinet made 28% shorter at the user's request.
    Radius and knob dimensions are preserved. The source frame-1800 forearm is
    translated down by the changed handle height (about 53 mm), maintaining contact.
    This is an illustration, not a recovered real-world pose or experimental image.
    Actual real trials remain in the video gallery immediately below it.
 
-Both robot panels use the same orthographic scale, so the height difference is
-visible. They illustrate the opening and closing phases of the same task, not
-separate definitions of the training and deployment tasks. The idle arm is hidden;
-proximal deployment-arm parts outside the focus area are hidden to avoid edge clutter.
-The physical cabinet materials remain those of the video USD; simulation display
-colors are adjusted only for the lighting-independent Workbench palette. Blender
-studio lighting is not calibrated for pixel-identical colors to Isaac footage.
+Both robot panels use the same orthographic scale and hardware color; differences
+come from cabinet height, view direction and the opening/closing phase. The idle
+arm is hidden; proximal deployment-arm parts outside the focus area are hidden.
+Both now include a matte tabletop with visible edges/contact shadows. Its native
+simulation dimensions are 1.36 × 1.08 × 0.08 m, centered at (0.32, 0.02, 0.70),
+with a top height of 0.74 m. Its gray finish follows the video's plain backdrop.
+The deployment table is schematic, not a measurement of the physical lab table.
+
+### Color reproduction
+
+The previous Workbench view overrode the robot with a light gray and flattened
+its appearance. This has been removed. The original Collada geometry is retained,
+but its white/gray material palette also differs from the experiment: inspection
+of the composed Piper USD shows all 16 shaders use `diffuse_color_constant`
+(0.018, 0.022, 0.028). Both panels use that dark finish in Cycles.
+
+Simply importing the cabinet USD did not reproduce Isaac's displayed yellow:
+the previous AgX/studio combination made it olive-brown. All four panels now use
+Khronos PBR Neutral, exposure +0.5 and neutral lighting. The yellow coating alone
+has an explicitly recorded Blender display calibration from linear RGB
+(0.23, 0.19, 0.045) to (0.27, 0.265, 0.085), judged against the delivered cabinet
+video. This is a rendering compensation; the source USD and videos are untouched.
+We do not claim pixel-identical cross-renderer colors. Wood texture bindings/UVs
+are unchanged. The five cabinet videos have two broad body appearances: one
+yellow coating and four light-wood variants, with differences in wood grain,
+handles, proportions and interiors; no extra video materials are invented.
 
 ## Native appearance sources
 
@@ -44,7 +63,7 @@ studio lighting is not calibrated for pixel-identical colors to Isaac footage.
 - Original context: `MATERIAL_UPDATE.md` in that same source directory describes
   the material repairs already applied before the video delivery.
 - Robot: `/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf`;
-  original Collada geometry, with a viewport or graphite presentation finish.
+  original Collada geometry, with the dark diffuse color from the composed Isaac USD.
 - Recorded state: `/opt/isaacsim/end/real_sim_fixed_camera_20261014/round_cabinet/round_cabinet_fixed_camera.jsonl`.
 - Pool examples: existing exports in `public/models/dataset/`, whose origins are
   listed in `public/data/dataset.json`.
@@ -87,8 +106,7 @@ python scripts/compose_robotics_workflow.py
 python scripts/robotics_roles.py
 ```
 
-Panels are 1280 × 1280. Cycles uses OptiX, 128 samples and denoising; the simulation
-panel uses Workbench with 32-sample antialiasing. Temporary PNGs, scenes and logs
+Panels are 1280 × 1280. All four panels use Cycles with OptiX, 128 samples and denoising. Temporary PNGs, scenes and logs
 live in `/tmp/rfw-workflow`. Pillow adds only headings, borders and connecting
 arrows outside the rendered panels, using a sans-serif font.
 
