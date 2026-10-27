@@ -2,8 +2,9 @@
 
 All four panels are rendered from native assets. Cabinet geometry, UVs and PBR
 bindings now come directly from the composed USD files used for the delivered
-experiment videos. The previous synthetic dark wood / blue-gray edit palette,
-handle substitutions and extra shelf were removed. No video frames or AI images
+experiment videos. Native geometry and interiors are preserved. At the user’s request, the last
+Edit example now has a muted blue enamel finish to illustrate material editing;
+this finish is only in the diagram, not in the recorded video. No video frames or AI images
 are used inside the workflow.
 
 ## Panels
@@ -12,13 +13,14 @@ are used inside the workflow.
    eight multi-category dataset examples. This is a representative retrieval
    illustration, not an actual ranking of the nine objects.
 2. **Edit**: the four actual video assets `seed_0000`, `seed_0001`, `strap_loop`
-   and `t_bar`, with their native light wood finishes, proportions, handles and
-   interiors. The retrieved cabinet and these four assets are displayed at a
+   and `t_bar`, with native proportions, handles and interiors. Three retain
+   their native light wood finishes; `t_bar` uses a muted blue enamel body with
+   the original dark handle, as an illustrative material edit. The retrieved cabinet and these four assets are displayed at a
    door angle of 0.98 radians (about 56° of the native 102° travel).
 3. **Simulation training**: a shaded Cycles view with the dark Piper finish used
    in the simulation USD. Frame 900 supplies the native left-Piper joint state and
-   opening angle. Cabinet scale remains 0.66, matching the simulation. A finite
-   tabletop replaces the ungrounded flat-gray viewport. There is no ground grid.
+   opening angle. Cabinet scale remains 0.66, matching the simulation. The
+   background is clean white, with no tabletop, floor grid or contact shadow.
 4. **Real-world deployment**: a shaded deployment schematic with a dark right
    Piper and a yellow target cabinet made 28% shorter at the user's request.
    Radius and knob dimensions are preserved. The source frame-1800 forearm is
@@ -26,13 +28,13 @@ are used inside the workflow.
    This is an illustration, not a recovered real-world pose or experimental image.
    Actual real trials remain in the video gallery immediately below it.
 
-Both robot panels use the same orthographic scale and hardware color; differences
-come from cabinet height, view direction and the opening/closing phase. The idle
-arm is hidden; proximal deployment-arm parts outside the focus area are hidden.
-Both now include a matte tabletop with visible edges/contact shadows. Its native
-simulation dimensions are 1.36 × 1.08 × 0.08 m, centered at (0.32, 0.02, 0.70),
-with a top height of 0.74 m. Its gray finish follows the video's plain backdrop.
-The deployment table is schematic, not a measurement of the physical lab table.
+Both robot panels use the same orthographic scale and dark hardware color.
+Simulation shows the taller cabinet and the left arm opening it against a clean
+white background. Deployment shows the shorter cabinet, right arm closing it,
+a higher opposite-side camera angle and a soft contact shadow. Neither has a
+visible tabletop or floor grid. An invisible shadow catcher is used only for
+deployment. The idle arm is hidden; proximal deployment-arm parts outside the
+focus area are hidden. Both remain rendered illustrations.
 
 ### Color reproduction
 
@@ -48,10 +50,10 @@ Khronos PBR Neutral, exposure +0.5 and neutral lighting. The yellow coating alon
 has an explicitly recorded Blender display calibration from linear RGB
 (0.23, 0.19, 0.045) to (0.27, 0.265, 0.085), judged against the delivered cabinet
 video. This is a rendering compensation; the source USD and videos are untouched.
-We do not claim pixel-identical cross-renderer colors. Wood texture bindings/UVs
-are unchanged. The five cabinet videos have two broad body appearances: one
+We do not claim pixel-identical cross-renderer colors. The first three edited cabinets retain their wood texture bindings/UVs. The five cabinet videos have two broad body appearances: one
 yellow coating and four light-wood variants, with differences in wood grain,
-handles, proportions and interiors; no extra video materials are invented.
+handles, proportions and interiors. The blue enamel in the fourth workflow
+example is a separate illustrative material edit, not a claim about those videos.
 
 ## Native appearance sources
 

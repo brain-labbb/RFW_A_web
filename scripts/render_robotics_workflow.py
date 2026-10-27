@@ -346,10 +346,21 @@ def retrieval():
 def edits():
     audit['presentation_door_angle_rad'] = .98
     right, up, _ = camera((1.5, -2.5, 1.6), scale=3.25)
-    # These are the same four video assets, with no synthetic recoloring,
-    # handle replacement, added shelf or presentation resizing.
+    # Native video geometries; the last variant adds a user-requested finish
+    # edit for this workflow illustration. It is not a new recorded trial.
     for i, variant in enumerate(['seed_0000', 'seed_0001', 'strap_loop', 't_bar']):
         root, meshes, _ = cabinet(variant)
+        if variant == 't_bar':
+            finish = material('Illustrative muted blue enamel', (.045, .12, .17), metallic=.12, roughness=.32)
+            for ob in meshes:
+                if ob.get('visual_name') in ('shell', 'plinth', 'foot_ring', 'shelf_post', 'door_panel'):
+                    ob.data.materials.clear()
+                    ob.data.materials.append(finish)
+            audit['illustrative_material_edit'] = {
+                'asset': 'round_cabinet_t_bar', 'finish': 'muted blue enamel',
+                'scope': 'workflow illustration only; source USD and video unchanged',
+                'linear_rgb': [.045, .12, .17], 'metallic': .12, 'roughness': .32,
+            }
         tile(root, meshes, -.69 if i % 2 == 0 else .69, .67 if i < 2 else -.67,
              right, up, fixed_scale=1.5)
         audit['edits'].append({'video_id': 'sim_' + variant.replace('seed_', 'seed'),
@@ -438,16 +449,19 @@ def robot_scene(deploy=False):
                     matrix[2][j] /= height_scale
                 ob.matrix_world = matrix
         bpy.context.view_layer.update()
-    # A finite, visible tabletop grounds the action. Its top is at the native
-    # simulation height; the framing/edge is schematic, not a measured real desk.
-    table_mat = material('Matte experiment tabletop', (.18, .18, .18), roughness=.85)
-    cube('Experiment tabletop', (.32, .02, .700), (1.36, 1.08, .08), table_mat, .004)
+    # No visible tabletop or grid. Deployment alone has a soft contact shadow
+    # on an invisible catcher to distinguish it from the clean simulation view.
+    if deploy:
+        bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
+        floor = bpy.context.object
+        floor.name = 'Invisible deployment shadow catcher'
+        floor.is_shadow_catcher = True
+        floor.data.materials.append(WHITE)
     motion_arrow(raw[:3], opening=not deploy)
     camera((-3.0, 2.0, 2.5) if deploy else (-3.0, -.9, 1.8),
-           target=(.30, .025, .85 if deploy else .87), scale=.85)
-    audit['tabletop'] = {'center_m': [.32, .02, .70], 'size_m': [1.36, 1.08, .08],
-                        'top_m': .74, 'material': 'native simulation backdrop gray',
-                        'real_world_geometry': 'illustrative, not measured'}
+           target=(.30, .025, .90 if deploy else .945), scale=.70)
+    audit['tabletop'] = False
+    audit['contact_shadow'] = deploy
     audit['illustration_only'] = True
     audit['cabinet_finish'] = 'native video USD materials with documented Blender display calibration'
     audit['simulation_grid'] = False
