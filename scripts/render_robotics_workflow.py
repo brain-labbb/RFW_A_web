@@ -426,7 +426,7 @@ def robot_scene(deploy=False):
             if deploy:
                 ob.data.materials.clear();ob.data.materials.append(graphite)
     root, meshes, _ = cabinet(q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
-    finish_cabinet(meshes, 'target' if deploy else 'blue_gray')
+    finish_cabinet(meshes, 'target')
     raw = p['mechanism_roots']['round_cabinet_crown_molding']
     root.location, root.scale = raw[:3], (.66,) * 3
     root.rotation_mode = 'QUATERNION'
@@ -436,18 +436,11 @@ def robot_scene(deploy=False):
     bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
     floor = bpy.context.object;floor.name = 'Contact shadow plane'
     floor.is_shadow_catcher = True;floor.data.materials.append(WHITE)
-    if not deploy:
-        grid = material('Simulation grid', (.26, .33, .36), roughness=.9)
-        for i in range(-3, 5):
-            x = .347+i*.08
-            line('Grid X', [(x, -.23, .738), (x, .30, .738)], grid, .00065)
-        for i in range(-3, 4):
-            y = .034+i*.08
-            line('Grid Y', [(.08, y, .738), (.64, y, .738)], grid, .00065)
     motion_arrow(raw[:3], opening=not deploy)
     camera((-3.0, 2.0, 1.8) if deploy else (-3.0, -.9, 1.8), target=(.30, .025, .945), scale=.70)
     audit['illustration_only'] = True
-    audit['cabinet_finish'] = 'target' if deploy else 'blue_gray'
+    audit['cabinet_finish'] = 'target'
+    audit['simulation_grid'] = False
     audit['robot_finish'] = 'graphite presentation finish' if deploy else 'original Collada materials'
     audit['target_material_source'] = '/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda'
 

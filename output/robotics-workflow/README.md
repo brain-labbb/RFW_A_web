@@ -20,11 +20,11 @@ version. Desktop and mobile WebP assets are composed from the same four panels.
    exposing the interior while remaining inside the original 102° door travel.
    The native T-bar dimensions are translated radially by 25 mm to match this
    cabinet. These are presentation edits, not new evaluated training samples.
-3. **Train in simulation**: a close-up of the left Piper arm pushing the blue-gray
+3. **Simulation training**: a close-up of the left Piper arm pushing the yellow
    cabinet open. Pose and door state come from simulation frame 900. The cabinet
-   scale is 0.66, exactly as in `isaac_route/common/sim_asset.py`. A light spatial
-   grid and an arc around the real door axis show the simulation context and motion.
-4. **Deploy zero-shot**: a close-up of the right Piper arm pushing the yellow
+   scale is 0.66, exactly as in `isaac_route/common/sim_asset.py`. An arc around
+   the real door axis shows the opening motion; there is no ground grid.
+4. **Real-world deployment**: a close-up of the right Piper arm pushing the yellow
    target cabinet closed, with a reversed motion arrow and a graphite hardware
    finish. It uses simulation frame 1800 as the pose for a deployment illustration;
    it is not a recovered real-world robot pose, photograph, or real trial.
@@ -53,8 +53,7 @@ branch; it does not redefine all three experimental training conditions.
 - Retrieved cabinet base colors: original URDF material palette. Adjacent appearance manifests
   contain incomplete texture references; these are not replaced with invented textures.
 - Target cabinet material: the runtime USD appearance layer, diffuse `(0.23, 0.19, 0.045)`
-  and roughness 0.85. This appears in one edit and the deployment panel. The training panel uses the
-  same blue-gray finish as another edit.
+  and roughness 0.85. The same finish appears in one edit and both the training and deployment panels.
 
 The two walnut variants share one procedural wood shader definition; this is an
 illustrative material edit, not a claimed source dataset texture. The shelf/post
@@ -62,7 +61,7 @@ visual is imported from the native `seed_0000/model.urdf`, without changing its
 mesh. It attaches to the cabinet body; the other variants retain the original empty cavity.
 
 Sources remain read-only. Lighting, camera placement, selection brackets, display
-plinths, simulation grid and motion arrows are presentation elements. Lettering, borders and
+plinths and motion arrows are presentation elements. Lettering, borders and
 arrows outside the panels are composed with Pillow, using a sans-serif font.
 
 ## Reproduce
@@ -87,3 +86,10 @@ previous revision.
 `render-audit.json` records sources, edits, devices and native URDF forward-kinematics
 agreement with the recorded robot finger poses (maximum position error is recorded in the audit).
 This verifies pose import, not physics validity of the illustrative edits.
+
+The enlarged image viewer has no visible caption below the picture; accessible
+image descriptions remain available as alt text.
+
+The last two headings explicitly distinguish simulation training and real-world
+deployment. Both cabinets share the target yellow material; the robot finishes
+remain light in simulation and graphite in the deployment schematic.

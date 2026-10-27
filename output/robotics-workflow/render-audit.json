@@ -115,7 +115,8 @@
       "visible_arm": "left",
       "motion_phase": "opening",
       "illustration_only": true,
-      "cabinet_finish": "blue_gray",
+      "cabinet_finish": "target",
+      "simulation_grid": false,
       "robot_finish": "original Collada materials",
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
