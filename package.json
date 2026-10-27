@@ -10,7 +10,8 @@
     "test": "node scripts/browser-test.mjs",
     "test:dataset": "node scripts/dataset-test.mjs",
     "test:scenes": "node scripts/scenes-test.mjs",
-    "test:hero": "node scripts/hero-test.mjs"
+    "test:hero": "node scripts/hero-test.mjs",
+    "test:robotics": "node scripts/robotics-test.mjs"
   },
   "dependencies": {
     "three": "0.180.0"

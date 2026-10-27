@@ -38,11 +38,12 @@ for(const e of ['component','count','material','size']){
 await page.locator('[data-result="validity"]').click();check('Quality table has all eight datasets',await page.locator('#results-table tbody tr').count()===8);
 await page.locator('[data-result="transfer"]').click();await page.locator('#split-select').selectOption('in');check('Articulation-estimation split changes',await page.locator('#results-table').textContent().then(t=>t.includes('0.78873')));
 await page.locator('[data-result="scale"]').click();await page.locator('[data-sort="1"]').click();check('Result table sorts numerically',await page.locator('#results-table tbody tr').first().textContent().then(t=>t.includes('RFW-A')));
+await page.locator('#sim2real').scrollIntoViewIfNeeded();await page.waitForFunction(()=>window.__roboticsReady);
 for(const task of ['round_cabinet','folding_chair','double_door','toaster','folding_ruler']){
- await page.locator(`[data-task="${task}"]`).click();await page.evaluate(()=>{document.querySelector('#sim-video').load();document.querySelector('#real-video').load();});
- check(`${task} has matched simulation and real videos`,await page.locator('#sim-video').getAttribute('src').then(s=>s.includes(task))&&await page.locator('#real-video').getAttribute('src').then(s=>s.includes(task)));
+ await page.locator(`[data-task="${task}"]`).click();
+ check(`${task} shows five simulation clips and one real-world clip`,await page.locator('#robotics-grid video').count()===6&&await page.locator('#robotics-grid .robotics-real').count()===1);
 }
-await page.locator('#play-pair').click();await page.waitForFunction(()=>document.querySelector('#sim-video').currentTime>0&&document.querySelector('#real-video').currentTime>0,{timeout:20000});check('Paired videos decode and play',true);await page.locator('#play-pair').click();
+await page.locator('#robotics-replay').click();await page.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].some(v=>v.currentTime>0),{timeout:20000});check('Robotics recordings decode and play',true);await page.locator('#robotics-play').click();
 await page.locator('.film-open').click();check('Film opens in a dialog',await page.locator('#film-dialog').isVisible());await page.keyboard.press('Escape');check('Closing film pauses playback',await page.locator('#film-dialog video').evaluate(v=>v.paused));
 await page.locator('[data-scene="indoor"]').click();await page.locator('#scene-play').click();await page.evaluate(()=>document.querySelector('#scene-video').pause());await page.locator('[data-filter="all"]').click();await page.locator('[data-info="structure"]').click();await page.locator('[data-edit="component"]').click();
 await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:'/tmp/rfw-web/desktop-final.png',fullPage:true});

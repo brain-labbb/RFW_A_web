@@ -1,8 +1,9 @@
 import './dataset.js';
 import './scenes.js';
 import './hero.js';
+import './robotics.js';
 import './style.css';
-import {scenes,edits,tasks,scaleRows,qualityRows,transferRows} from './data.js';
+import {scenes,edits,scaleRows,qualityRows,transferRows} from './data.js';
 const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];
 const base=import.meta.env.BASE_URL;
 const url=p=>base+p;
@@ -108,9 +109,6 @@ function renderResults(){
  $$('#results-table [data-sort]').forEach(b=>b.addEventListener('click',()=>{const c=Number(b.dataset.sort);sortDescending=sortColumn===c?!sortDescending:true;sortColumn=c;renderResults();}));
 }
 $$('[data-result]').forEach(b=>b.addEventListener('click',()=>{selectTab($$('[data-result]'),b);result=b.dataset.result;sortColumn=null;renderResults();}));$('#split-select').addEventListener('change',renderResults);renderResults();
-const sim=$('#sim-video'),real=$('#real-video');
-$$('[data-task]').forEach(b=>b.addEventListener('click',()=>{selectTab($$('[data-task]'),b);const task=b.dataset.task;for(const [v,suffix] of [[sim,'sim'],[real,'real']]){v.pause();v.poster=url(`media/${task}_${suffix}.webp`);v.src=videoUrl(`${task}_${suffix}`);v.load();}$('#task-description').textContent=tasks[task];$('#play-pair').innerHTML='Play both videos <span>▶</span>';}));
-$('#play-pair').addEventListener('click',()=>{if(sim.paused||real.paused){sim.currentTime=0;real.currentTime=0;Promise.allSettled([sim.play(),real.play()]);$('#play-pair').innerHTML='Pause both videos <span>Ⅱ</span>';}else{sim.pause();real.pause();$('#play-pair').innerHTML='Play both videos <span>▶</span>';}});
 fetch(url('data/paper.json')).then(r=>r.json()).then(p=>{
  const supers=s=>s.replaceAll('\\dagger','†').replaceAll('\\ddagger','‡');
  $('#author-details').innerHTML=`<div class="hero-author-list">${p.authors.map(([n,a])=>`<span>${esc(a)}<sup>${esc(supers(n))}</sup></span>`).join('')}</div><div class="hero-affiliations">${p.affiliations.map(([n,a])=>`<span><sup>${n}</sup> ${esc(a)}</span>`).join('')}</div><p class="hero-author-notes">* Equal contribution &nbsp; · &nbsp; † Project leader &nbsp; · &nbsp; ‡ Corresponding authors</p>`;$('#hero-abstract-text').textContent=p.abstract;

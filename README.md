@@ -33,7 +33,7 @@ Replace each `null` with its public HTTPS URL and rebuild. The three hero resour
 - Four directed-editing comparisons using existing generator outputs.
 - A generator-cost calculator using the paper's $10.62 authoring estimate and $1.237 per-asset baseline. Compute cost is excluded.
 - Dataset scale, asset quality, and articulation-estimation tables from the supplied paper. Numerical sorting and in-domain/category-OOD selection are supported.
-- Five pairs of simulation and real manipulation videos.
+- All 30 robotics recordings: five simulation assets and one real-world recording per task, across five tasks. Shared playback, task thumbnails, enlarged video viewing, and paper-aligned results.
 - Paper title, authors, affiliations, abstract, and results from `RFW_A_arxiv`.
 - Method figure replaced on 2026-10-27 with the supplied `mmexport1793000691972.jpg`, losslessly encoded as WebP. It matches the supplied PPT diagram; the image avoids font substitutions in the local PowerPoint export. The original image and PPT remain untouched.
 
@@ -105,3 +105,13 @@ The first screen uses a full-width, muted scene video behind the paper title, al
 “Watch full video” opens the supplied `2610261545030522.mp4` (2:24, including audio) using the existing film player; the published MP4 matches the supplied file byte-for-byte. Other videos pause while the film is open. Background playback pauses offscreen and respects reduced-motion and data-saving preferences. Benchmark remains a results section, without a navigation or hero button. Paper, Code, and Dataset links remain pending.
 
 `npm run test:hero` checks scene switching/playback, overlay controls, the full film, pending links, mobile layout, and reduced-motion behavior. Set `TEST_URL` and `PLAYWRIGHT_BROWSERS_PATH` as in the other browser checks.
+
+## Robotic manipulation gallery
+
+`src/robotics.js` and `public/data/robotics.json` drive the six-video task gallery. `scripts/prepare_robotics.py` imports all 30 recordings from `/opt/isaacsim/end/real_sim_final_20261014`, verifies the source manifest SHA-256 hashes before encoding, and checks source integrity afterward. Full timelines and supplied frame dimensions are retained; no task motion is trimmed. MP4 and WebM copies are silent and encoded at 4× for simulation, 2× for real-world recordings, except the short folding-chair recording at 1×. Cards and the enlarged player label the encoded speed.
+
+The paper representative simulation is shown first, followed by four other supplied simulation assets and the real-world target. The source manifest does not identify each clip with a specific retrieval/edit training configuration, so recordings are labelled as simulation examples; the three experimental configurations are reported separately using the Robotic Manipulation section of the paper. All use 500 simulation demonstrations per task, the same policy architecture and budget, and 10 real-world evaluation trials per task. The mean success rates are 62%, 72%, and 80%; detailed per-task results are expandable.
+
+Only the selected task's visible recordings load and play. Offscreen/background playback pauses, and reduced-motion/data-saving preferences disable automatic playback. Enlarging a video pauses the gallery and supports Escape and native playback controls. The old pair-view media remain in the repository but are no longer loaded by the page.
+
+Validation: `PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers TEST_URL=http://localhost:4178/ npm run test:robotics`. Encoding audit and browser screenshots are written to `/tmp/rfw-robotics/`.
