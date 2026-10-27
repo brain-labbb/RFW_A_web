@@ -28,8 +28,8 @@ Replace each `null` with its public HTTPS URL and rebuild. The three hero resour
 ## Included content
 
 - Four scene videos and the supplied 2:24 film, with MP4 and WebM playback versions.
-- 24 representative dataset samples across 12 categories, with category filtering, four same-generator seed families, and an on-demand 3D inspector for materials, parts, and individual URDF joints.
-- 84 searchable scene asset instances, with browser GLBs, original authored animations, thumbnails, joint metadata, and material properties.
+- One unified asset explorer: 31 image-grounded category generators, six source seeds each (186 assets), input images, 2D preview cards, selectable parts, source physics, and on-demand MuJoCo simulation. All samples are reselected directly from `PV_A_vlm`.
+- Scene walkthroughs retain their images, videos, object selection, and physical-property panels. The old standalone scene-asset 3D viewer and its two scene links are retired.
 - Four directed-editing comparisons using existing generator outputs.
 - A generator-cost calculator using the paper's $10.62 authoring estimate and $1.237 per-asset baseline. Compute cost is excluded.
 - Dataset scale, asset quality, and articulation-estimation tables from the supplied paper. Numerical sorting and in-domain/category-OOD selection are supported.
@@ -45,10 +45,12 @@ The 84 instances are a scene showcase, not the full 402,410-asset release. The s
 - `src/style.css`: responsive typography, colors, layout; local font declarations.
 - `src/main.js`: scene switching, explorer, editors, tables, dialogs, and videos.
 - `src/viewer.js`: lazily loaded Three.js viewer and animation playback.
-- `demo.html` / `src/demo.js`: the full-screen Interactive demo opened from the project page.
+- `demo.html` / `src/demo.js`: compatibility redirect to the unified explorer; old scene assets are not loaded.
 - `src/data.js`: page comparison values and editing metadata.
 - `public/data/catalog.json`: 84 native scene asset instances.
-- `public/data/dataset.json` / `src/dataset.js`: representative PV_A_vlm samples and the dataset gallery/inspector.
+- `public/data/explorer.json` / `src/explorer.js` / `src/explorer.css`: unified input-image, generator-family, and seed explorer.
+- `src/simulation.js`: lazily loaded, pinned `@mujoco/mujoco` 3.17.0 WebAssembly runtime.
+- `public/data/explorer/`: source part details and standalone simulation MJCF; `public/models/explorer/` and `public/media/explorer/`: models, seed previews, and input images.
 - `public/data/physics/`: six physical-property fields per material group.
 - `public/data/resources.json`: release URLs.
 
@@ -67,36 +69,47 @@ Existing source physics records were examined first; 57/84 assets have source-se
 
 ## Validation
 
-### Representative dataset preparation
+### Unified asset explorer
 
-The showcase reads `/data/oss_bucket_0/yuanbo/PV_A_vlm/assets` without modifying it. `scripts/prepare_dataset.py` records 24 selected seeds, original URDF joint metadata, material classes, and source hashes. The four families share a source-recorded template hash within each category: ceiling fans, drawer cabinets, satellites, and Ferris wheels. The page's release totals come from the paper, not extrapolation from these examples.
+The gallery uses **31 categories × 6 seeds = 186 assets** from `/data/oss_bucket_0/yuanbo/PV_A_vlm/assets`. Input images come from `/home/lyuyuanbo.lyb/PVA/articraft_data/picture`. Source maps explicitly associate these images with the generator's upstream examples; each selected seed has the exact SHA-256 of the local category template. Multiple source images are exposed with small image buttons. `Input image` refers to a generator reference, not to a claim that each seed independently reconstructs that image.
 
-`scripts/export_dataset.py` runs in the existing Blender installation and exports source geometry, joint hierarchies, and PBR bindings to GLB. Texture resolution is reduced for the browser; primitive UVs use the exporter mapping. This is a web representation, not the original release format. The inspector applies URDF kinematics, not physics simulation. `scripts/finish_dataset.py` compresses previews and verifies that every exported model preserves its movable joint identities with no missing source textures. Renders and audit reports stay in `/tmp/rfw-dataset/`.
+Only images and the compact manifest load initially. Clicking a seed loads one GLB and its source property record. `Simulate` loads the engine and that seed's MJCF. All URDF links have buttons below the viewer, including fixed parts. Clicking a mesh selects its link; the surface selector exposes its material annotations. Joint sliders honor mimic dependencies. The engine supports run/pause/reset, gravity, and brief positive/negative joint-force pulses. Selection and shared URLs remain within this same exhibit.
 
-The 24 GLBs total about 69 MB, fetched individually only when a sample is selected. Thumbnail images are lazy loaded. Sample links use `?sample=<sample-id>#dataset`. The full dataset is not bundled or made accessible by this page.
-
-### Browser checks
+Preparation uses the existing Blender 5.2.2 and Genesis Python environment, with all caches, source copies, render output, and reports under `/tmp/rfw-explorer/`:
 
 ```bash
-PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm test
-TEST_URL=http://127.0.0.1:4174/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:dataset
+/tmp/venvs/genesis/bin/python scripts/prepare_explorer.py
+python scripts/render_explorer_batch.py
+/tmp/venvs/genesis/bin/python scripts/finish_explorer.py
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 /tmp/venvs/genesis/bin/python scripts/export_explorer_physics.py
+OPENBLAS_NUM_THREADS=1 /tmp/venvs/genesis/bin/python scripts/map_explorer_properties.py
+/tmp/venvs/genesis/bin/python scripts/map_explorer_properties.py --apply
+OPENBLAS_NUM_THREADS=1 /tmp/venvs/genesis/bin/python scripts/prepare_explorer_interaction.py
 ```
 
-Run against the preview server with `TEST_URL=http://127.0.0.1:4174/` if desired. The test checks catalog/file coverage, physical-value ranges, pending release buttons, model animation, scene/search/edit controls, result tables, video playback, desktop/mobile layouts, and browser/network errors. The full-screen demo has a separate smoke check for scene filtering, native geometry loading, and material properties. Reports and screenshots go to `/tmp/rfw-web/`.
+The mapping and interaction preparation steps run after physics export to preserve all records. The source datasets and templates are read-only. `scripts/explorer_exclusions.json` prevents withdrawn categories and samples from returning during preparation. The entire `Curtain_blind` category is withdrawn: flexible cords and shade fabric are outside the current rigid-body demo; all source data is preserved. The scripts skip candidates with missing physics records or mismatched generator versions. Seed selection favors different link/joint/visual structures, then material classes. GLBs preserve joint identities and source transforms; source textures are downsampled for the browser. Previews use a consistent camera direction and individual framing.
 
-The dataset test opens all 24 models, checks joint controls and part coloring, and exercises category filters, seed families, sample links, lazy model loading, and mobile layouts. Its reports and screenshots go to `/tmp/rfw-dataset/`.
+Source physical records sometimes group repeated surfaces or use descriptive names. Surface annotations are joined by unambiguous normalized names or verified scaled centroid and solid volume. Grouped annotations share material properties; their masses are never added repeatedly. Unmatched surface properties remain unavailable. Source link mass, center of mass, inertial tensor, joint limits, and dynamics retain their own provenance. Appearance materials and physical annotations are labeled separately when inspecting a surface.
 
-Design references the section organization of [Artisan](https://physicalvision.github.io/artisan/) and dataset presentation of [Articraft](https://articraft3d.github.io/). Page implementation, assets, authors, and numerical results are specific to RFW-A.
+Simulation is a **fixed-base rigid-body interaction demo**, not a reproduction of the paper's validation protocol. Concave source collision meshes use CoACD decomposition before MuJoCo compilation so openings are not replaced by one filled convex hull. Source inertial tensors that fail positivity or the triangle inequality receive recorded simulator-only projections; the inspector still displays the original source values. Missing source inertials use MuJoCo's geometry-derived defaults. Source `mu1` becomes sliding friction; torsional/rolling friction use declared defaults. The source restitution, Young's modulus, and Poisson ratio are displayed annotations, not soft-body parameters or an exact restitution conversion. Damped interaction is enabled by default: virtual joint damping is at least rated effort / rated speed, with a reflected armature of 2% child subtree mass (slide) or 2% mass × collision radius² (hinge). The checkbox restores source joint damping and armature when disabled. Missing rated effort uses subtree gravity force/torque; missing rated speed uses 0.1 m/s or 2 rad/s. These controls do not overwrite displayed source properties. A speed guard pauses at 10× rated/fallback speed and restores the previous pose; some source collision configurations still require a reset or joint adjustment. Directly connected rigid groups, including the fixed base, are excluded from self-contact; nonadjacent contact remains enabled. These adaptations are documented in the per-asset simulation records.
+
+Run `npm run test:physics` for ten-second default-pose rollouts of all published models in the same MuJoCo WASM engine as the browser. These checks do not imply stability for arbitrary poses or forces. Run `npm run test:dataset` for all 31 families, part controls, joint motion, live MuJoCo, sample URLs, rapid switching, lazy loading, and 390/320px layouts. `npm test`, `npm run test:hero`, `npm run test:scenes`, and `npm run test:robotics` cover the other page features. Browser screenshots and the explorer report are written to `/tmp/rfw-explorer/`.
+
+The hero retains **Explore this scene**, which selects and opens the current scene. The two additional hero actions (Explore scenes and Interactive demo) are removed. The top navigation has one Explore assets link for the unified exhibit.
 
 ## Scene walkthroughs
 
-`Explore the scenes` now pairs a scene image with selectable object regions and an adjacent camera clip and property panel. Four scene maps expose three featured objects each; all 84 native instances remain available in the interactive demo. Object links open the selected asset directly. Close-ups are rendered from the native scene animation with new cameras, not live physics simulations.
+`Explore the scenes` now pairs a scene image with selectable object regions and an adjacent camera clip and property panel. Four scene maps expose 56 selectable objects (16 indoor, 16 outdoor, 9 space, 15 laboratory); the scene walkthrough remains independent of the dataset explorer. The obsolete scene-to-3D links are removed; scene selection and property panels remain available. Close-ups are rendered from the native scene animation with new cameras, not live physics simulations.
 
-The 12 five-second clips are rendered at 960 × 540, 24 fps with Cycles/OptiX. `scripts/scene_shots.json` records their camera endpoints and native frame ranges. `scripts/render_scene_batch.py final` schedules independent jobs across GPUs 0–7. Render output stays in `/tmp/rfw-scenes/`; `scripts/render_scene_maps.py -- <scene>` creates map images and projects the audited visual-mesh membership into clickable regions. `scripts/finish_scene_media.py` publishes compressed MP4/WebM clips, WebP images, and `public/data/scenes.json`.
+The 56 five-second clips are rendered at 960 × 540, 24 fps with Cycles/OptiX. `scripts/scene_shots.json` records their camera endpoints and native frame ranges. `scripts/render_scene_batch.py final` schedules independent jobs across GPUs 0–7. Render output stays in `/tmp/rfw-scenes/`; `scripts/render_scene_maps.py -- <scene>` creates map images and projects the audited visual-mesh membership into clickable regions. `scripts/finish_scene_media.py` publishes compressed MP4/WebM clips, WebP images, and `public/data/scenes.json`.
 
 For the space scene, `scripts/extend_space_stage.py` joins additional terrain to the existing boundary and replaces the finite star backdrop with a camera-visible panoramic dome using the native procedural material. Earth, asset geometry, rigs, and lighting are retained. These changes exist only in the render copy; the four original scene files are never overwritten. The space map uses native frame 240 to show the assembled scene.
 
-Run `TEST_URL=http://127.0.0.1:4175/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:scenes` to verify all 12 clip selections, playback, materials and joints, map/video switching, mobile layouts, and direct 3D links.
+Run `TEST_URL=http://127.0.0.1:4175/ PLAYWRIGHT_BROWSERS_PATH=/tmp/rfw-web/browsers npm run test:scenes` to verify all 56 clip selections, playback, mass/materials, joint limits, dynamics and inertia, map/video switching, mobile layouts, and optional 3D links.
+
+Part-level details follow the inspector structure on [Artisan](https://physicalvision.github.io/artisan/): total mass per instance, mass/materials, joint limits, joint dynamics, and inertia. `public/data/scene-physics/*.json` records per-field provenance. Matched source parameters are retained; ambiguous source seeds are not silently selected. Native groups belonging to the same source link are merged to avoid counting its mass twice. Missing masses, centers of mass, mass-distribution variances and dynamics are annotated with **qwen3.8-max**, `reasoning_effort: medium`. Missing inertia uses Qwen-estimated center-of-mass fractions and mass-distribution variances within native part bounds, converted to a physically consistent diagonal approximation; its COM and axes are explicitly labeled as scene-space estimates. Source inertia retains source link/inertial coordinates and RPY. These are model parameters, not measured physical validation.
+
+To rebuild annotations, run `prepare_scene_expansion.py` with Blender once per scene (`-- indoor`, etc.), then `python scripts/annotate_scene_properties.py /path/to/api.txt`. The credential file is parsed without executing it; it is never copied to public assets. Cached responses, request fingerprints, usage, and estimate rationale stay in ignored `offline/scene-physics-audit/`. Run `python scripts/validate_scene_properties.py` to check full coverage, mass totals, duplicate source links, parameter ranges, and inertia tensors. Generated frames and validation screenshots stay in `/tmp/rfw-scenes/`.
 
 ## Video masthead
 

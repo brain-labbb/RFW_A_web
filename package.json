@@ -8,16 +8,18 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node scripts/browser-test.mjs",
-    "test:dataset": "node scripts/dataset-test.mjs",
+    "test:dataset": "node scripts/explorer-test.mjs",
     "test:scenes": "node scripts/scenes-test.mjs",
     "test:hero": "node scripts/hero-test.mjs",
-    "test:robotics": "node scripts/robotics-test.mjs"
+    "test:robotics": "node scripts/robotics-test.mjs",
+    "test:physics": "node scripts/explorer-physics-test.mjs"
   },
   "dependencies": {
+    "@mujoco/mujoco": "3.17.0",
     "three": "0.180.0"
   },
   "devDependencies": {
-    "vite": "7.1.12",
-    "playwright": "1.56.1"
+    "playwright": "1.56.1",
+    "vite": "7.1.12"
   }
 }

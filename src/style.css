@@ -68,3 +68,12 @@ input[type=range]{accent-color:var(--accent)}
 
 .robotics-domain-sim figure[data-role="retrieved"]{border-color:var(--ink)}
 .robotics-domain-sim figure[data-role="retrieved"] figcaption{font-weight:600}
+/* Part-level scene inspector */
+.scene-inspector-heading{position:relative;padding-right:145px;min-height:90px}.scene-mass{position:absolute;right:18px;top:18px;text-align:right}.scene-mass strong{font-size:27px;font-weight:500;letter-spacing:-1px}.scene-mass>span{font-size:11px;margin-left:5px}.scene-mass small{display:block;font-size:9px;color:var(--muted);margin-top:5px}.scene-property-tabs{gap:0;justify-content:space-between;padding:0 12px}.scene-property-tabs button{padding:12px 5px;font-size:10px;white-space:nowrap}.scene-joint-scroll{max-height:280px;scrollbar-gutter:stable}.scene-joint-scroll caption{text-align:left;font-size:11px;color:var(--muted);padding:0 0 13px}.scene-joint-scroll th{font-weight:500}.scene-joint-scroll tbody th{width:29%}.scene-joint-scroll th,.scene-joint-scroll td{padding:10px 5px;line-height:1.65}.scene-joint-scroll td:nth-child(2){width:24%}.scene-physics-note{font-size:10px;line-height:1.65;color:var(--muted);padding-top:12px;border-top:1px solid var(--line);margin-top:12px}.physics-estimate{color:var(--muted);font-size:9px}.scene-object-properties{min-height:290px}.scene-object-choices{max-height:230px;overflow:auto;padding:2px}.scene-pin>span:first-child{width:22px;height:22px;font-size:9px}.scene-pin:hover,.scene-pin:focus-visible{z-index:4}@media(max-width:400px){.scene-inspector-heading{padding-right:120px}.scene-mass{right:12px}.scene-mass strong{font-size:23px}.scene-inspector-heading h3{font-size:20px}.scene-property-tabs{padding:0 7px}.scene-property-tabs button{font-size:9px;padding-inline:3px}.scene-object-properties{padding:14px 12px}}
+
+.scene-joint-scroll table{font-size:12px}.scene-joint-scroll caption{font-size:12px}.scene-joint-scroll th:first-child{width:30%}.scene-joint-scroll th:nth-child(2){width:23%}.scene-property-tabs button{font-size:11px}.scene-object-summary{font-size:11px}.scene-physics-note{font-size:11px}@media(max-width:400px){.scene-property-tabs button{font-size:9px}.scene-joint-scroll table{font-size:11px}}
+
+.scene-pin[aria-pressed=true]{z-index:3}
+
+.scene-material-details{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;font-size:11px}.scene-material-details summary{cursor:pointer;color:var(--muted)}.scene-material-extra{margin-top:12px}
+.scene-joint-scroll th,.scene-joint-scroll td{white-space:normal;word-break:normal}

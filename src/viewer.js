@@ -22,6 +22,7 @@ export class AssetViewer {
   this.renderer.setAnimationLoop(()=>{
    const delta=Math.min(this.clock.getDelta(),.05);
    if(!this.visible||document.hidden)return;
+   this.beforeRender?.(delta);
    if(this.mixer&&this.playing){this.time=(this.time+delta)%this.duration;this.mixer.setTime(this.time);this.onProgress?.(this.time/this.duration,this.time);}
    this.controls.update();this.renderer.render(this.scene,this.camera);
   });

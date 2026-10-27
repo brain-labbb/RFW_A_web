@@ -33,5 +33,6 @@ for a in shots:
    c=world_to_camera_view(s,s.camera,o.matrix_world@Vector(b))
    if c.z>0:points.append((round(max(0,min(1,c.x)),5),round(max(0,min(1,1-c.y)),5)))
  poly=hull(points);pin=[(min(p[i] for p in poly)+max(p[i] for p in poly))/2 for i in range(2)];items.append({'id':a['id'],'pin':pin,'polygon':poly})
-(O/(sid+'-map.json')).write_text(json.dumps(items,indent=2));s.render.image_settings.file_format='PNG';s.render.filepath=str(O/(sid+'-map.png'));bpy.ops.render.render(write_still=True)
+(O/(sid+'-map.json')).write_text(json.dumps(items,indent=2));s.render.image_settings.file_format='PNG';s.render.filepath=str(O/(sid+'-map.png'));
+if '--project-only' not in sys.argv:bpy.ops.render.render(write_still=True)
 print('MAP_READY',sid,flush=True)
