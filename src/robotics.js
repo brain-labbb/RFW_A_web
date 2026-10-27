@@ -40,7 +40,7 @@ const observer = new IntersectionObserver(entries => {
 }, {threshold: .15});
 function enlarge(clip, task) {
   videos.forEach(v => v.pause());
-  document.querySelector('#robotics-dialog-title').textContent = `${task.label} · ${clip.label} · ${clip.speed}×`;
+  document.querySelector('#robotics-dialog-title').textContent = `${task.label} · ${clip.label}`;
   enlarged.poster = mediaUrl(clip.poster);
   enlarged.src = sourceUrl(clip);
   enlarged.setAttribute('aria-label', `${task.label}: ${clip.label}`);
@@ -58,15 +58,23 @@ function select(task) {
   picker.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.task === task.id)));
   section.querySelector('#robotics-selection').textContent = task.label;
   section.querySelector('#task-description').textContent = task.description;
-  const realSpeed = task.videos.find(v => v.domain === 'real').speed;
-  section.querySelector('#robotics-speed').textContent = `Playback: simulation 4× · real world ${realSpeed}×`;
+  const groups = {};
+  for (const [domain, title, note] of [['sim', 'Simulation', '5 asset variants'], ['real', 'Real world', 'Zero-shot transfer']]) {
+    const group = document.createElement('section');
+    group.className = `robotics-domain robotics-domain-${domain}`;
+    group.setAttribute('aria-labelledby', `robotics-${domain}-title`);
+    const heading = document.createElement('div'); heading.className = 'robotics-domain-heading';
+    const h4 = document.createElement('h4'); h4.id = `robotics-${domain}-title`; h4.textContent = title;
+    const description = document.createElement('span'); description.textContent = note;
+    heading.append(h4, description);
+    const contents = document.createElement('div'); contents.className = 'robotics-domain-videos';
+    group.append(heading, contents); grid.append(group); groups[domain] = contents;
+  }
   for (const clip of task.videos) {
     const figure = document.createElement('figure');
     if (clip.domain === 'real') figure.className = 'robotics-real';
     const caption = document.createElement('figcaption');
-    const label = document.createElement('span'); label.textContent = clip.label;
-    const speed = document.createElement('span'); speed.className = 'robotics-speed'; speed.textContent = `${clip.speed}×`;
-    caption.append(label, speed);
+    caption.textContent = clip.domain === 'sim' ? clip.label.replace('Simulation', 'Asset') : task.label;
     const button = document.createElement('button');
     button.className = 'robotics-enlarge';
     button.setAttribute('aria-label', `Enlarge ${task.label}: ${clip.label}`);
@@ -77,7 +85,7 @@ function select(task) {
     video.poster = mediaUrl(clip.poster);
     video.dataset.src = sourceUrl(clip);
     video.dataset.clip = clip.id;
-    video.setAttribute('aria-label', `${task.label}: ${clip.label}, ${clip.speed} times speed`);
+    video.setAttribute('aria-label', `${task.label}: ${clip.label}`);
     video.addEventListener('error', () => {
       if (!video.hasAttribute('src')) return;
       button.classList.add('has-error');
@@ -87,7 +95,7 @@ function select(task) {
     button.append(video, hint);
     button.addEventListener('click', () => enlarge(clip, task));
     figure.append(caption, button);
-    grid.append(figure);
+    groups[clip.domain].append(figure);
     videos.push(video);
     observer.observe(video);
   }
