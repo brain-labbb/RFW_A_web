@@ -6,7 +6,7 @@ const b=await chromium.launch({headless:true,args:['--no-sandbox','--use-angle=s
 await p.goto(base,{waitUntil:'networkidle'});await p.waitForSelector('.hero-author-list>span');
 ok('All 22 authors remain visible',await p.locator('.hero-author-list>span').count()===22);
 ok('Benchmark is absent from navigation and hero actions',await p.locator('.header nav a[href="#benchmark"],.hero-actions a[href="#benchmark"]').count()===0);
-ok('Six release buttons remain pending',await p.locator('.resource-links button:disabled').count()===6);
+ok('Three hero release buttons remain pending',await p.locator('.resource-links button:disabled').count()===3);
 ok('Video masthead spans the viewport',await p.locator('.project-hero').evaluate(e=>e.clientWidth===innerWidth&&e.clientHeight>=innerHeight-56));
 for(const id of ['indoor','outdoor','space','laboratory']){
  await p.locator(`[data-hero-scene="${id}"]`).click();await p.waitForFunction(()=>{const v=document.querySelector('#hero-video');return v.readyState>=2&&v.currentTime>0;},{},{timeout:30000});ok(`${id} background plays muted`,await p.locator('#hero-video').evaluate(v=>v.muted&&!v.paused));

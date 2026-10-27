@@ -87,6 +87,7 @@ window.rfw={selectAsset:async id=>selectAsset(catalog.find(a=>a.id===id)),get vi
 fetch(url('data/catalog.json')).then(r=>{if(!r.ok)throw Error('Catalog unavailable');return r.json();}).then(data=>{catalog=data;renderCatalog();const id=new URLSearchParams(location.search).get('asset');return selectAsset(catalog.find(a=>a.id===id)||catalog[0]);}).catch(()=>{$('#asset-grid').innerHTML='<p class="empty-results">The asset catalog could not load. Please reload the page.</p>';});
 
 $('#sample-count').addEventListener('input',e=>{const n=Number(e.target.value),cost=10.62/n;$('#sample-output').textContent=n.toLocaleString();$('#our-cost').textContent='$'+cost.toFixed(cost<1?3:2);$('#our-cost-bar').style.width=Math.min(100,cost/Math.max(1.237,cost)*100)+'%';$('.cost-row:not(.ours) .cost-track i').style.width=(1.237/Math.max(1.237,cost)*100)+'%';});
+$('#sample-count').dispatchEvent(new Event('input'));
 let activeEdit='component';
 function renderEdit(kind){
  activeEdit=kind;const e=edits[kind];$('#edit-title').textContent=e.title;$('#edit-description').textContent=e.description;$('#edit-before').src=url(`media/edit-${e.folder}-${e.files[0]}.webp`);$('#edit-before').alt=e.labels[0]+' reference configuration';$('#edit-before-caption').textContent=e.labels[0];
@@ -112,7 +113,7 @@ $$('[data-task]').forEach(b=>b.addEventListener('click',()=>{selectTab($$('[data
 $('#play-pair').addEventListener('click',()=>{if(sim.paused||real.paused){sim.currentTime=0;real.currentTime=0;Promise.allSettled([sim.play(),real.play()]);$('#play-pair').innerHTML='Pause both videos <span>Ⅱ</span>';}else{sim.pause();real.pause();$('#play-pair').innerHTML='Play both videos <span>▶</span>';}});
 fetch(url('data/paper.json')).then(r=>r.json()).then(p=>{
  const supers=s=>s.replaceAll('\\dagger','†').replaceAll('\\ddagger','‡');
- $('#author-details').innerHTML=`<div class="hero-author-list">${p.authors.map(([n,a])=>`<span>${esc(a)}<sup>${esc(supers(n))}</sup></span>`).join('')}</div><div class="hero-affiliations">${p.affiliations.map(([n,a])=>`<span><sup>${n}</sup> ${esc(a)}</span>`).join('')}</div><p class="hero-author-notes">* Equal contribution &nbsp; · &nbsp; † Project leader &nbsp; · &nbsp; ‡ Corresponding authors</p>`;$('#abstract-text').textContent=p.abstract;$('#hero-abstract-text').textContent=p.abstract;
+ $('#author-details').innerHTML=`<div class="hero-author-list">${p.authors.map(([n,a])=>`<span>${esc(a)}<sup>${esc(supers(n))}</sup></span>`).join('')}</div><div class="hero-affiliations">${p.affiliations.map(([n,a])=>`<span><sup>${n}</sup> ${esc(a)}</span>`).join('')}</div><p class="hero-author-notes">* Equal contribution &nbsp; · &nbsp; † Project leader &nbsp; · &nbsp; ‡ Corresponding authors</p>`;$('#hero-abstract-text').textContent=p.abstract;
 }).catch(()=>{});
 fetch(url('data/resources.json')).then(r=>r.json()).then(resources=>{for(const [key,href]of Object.entries(resources)){if(!href||!/^https:\/\//.test(href))continue;$$('.resource-links button').filter(b=>b.textContent.toLowerCase().startsWith(key)).forEach(b=>{const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';a.textContent=key[0].toUpperCase()+key.slice(1)+' ↗';b.replaceWith(a);});}}).catch(()=>{});
 

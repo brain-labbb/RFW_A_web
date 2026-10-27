@@ -23,7 +23,7 @@ All three buttons deliberately remain **SOON**, including Paper. No local paper 
 {"paper": null, "code": null, "dataset": null}
 ```
 
-Replace each `null` with its public HTTPS URL and rebuild. Both sets of resource buttons update automatically.
+Replace each `null` with its public HTTPS URL and rebuild. The three hero resource buttons update automatically. The footer contains only the citation and website credit.
 
 ## Included content
 
@@ -34,7 +34,8 @@ Replace each `null` with its public HTTPS URL and rebuild. Both sets of resource
 - A generator-cost calculator using the paper's $10.62 authoring estimate and $1.237 per-asset baseline. Compute cost is excluded.
 - Dataset scale, asset quality, and articulation-estimation tables from the supplied paper. Numerical sorting and in-domain/category-OOD selection are supported.
 - Five pairs of simulation and real manipulation videos.
-- Paper title, authors, affiliations, abstract, and figures from `RFW_A_arxiv`.
+- Paper title, authors, affiliations, abstract, and results from `RFW_A_arxiv`.
+- Method figure replaced on 2026-10-27 with the supplied `mmexport1793000691972.jpg`, losslessly encoded as WebP. It matches the supplied PPT diagram; the image avoids font substitutions in the local PowerPoint export. The original image and PPT remain untouched.
 
 The 84 instances are a scene showcase, not the full 402,410-asset release. The scenes contain repeated geometry. Animation playback follows the native scene; this is not a live physics simulation. Original `.blend` files and source datasets remain untouched. The website does not distribute the paper PDF, baseline datasets, source code archive, or full dataset release.
 

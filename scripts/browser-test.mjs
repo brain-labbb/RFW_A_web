@@ -18,7 +18,7 @@ const browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-g
 const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
 await page.goto(process.env.TEST_URL||'http://127.0.0.1:4173/',{waitUntil:'networkidle'});await page.waitForFunction(()=>window.__viewerReady,{timeout:60000});
-check('All six release buttons are pending',await page.locator('.resource-links button:disabled').count()===6);
+check('Only the three hero release buttons are pending',await page.locator('.resource-links button:disabled').count()===3);
 check('No local paper PDF is linked',await page.locator('a[href$=".pdf"]').count()===0);
 for(const s of ['indoor','outdoor','space','laboratory']){
  await page.locator(`[data-scene="${s}"]`).click();await page.waitForFunction(()=>document.querySelector('#scene-map-image').complete&&document.querySelector('#scene-map-image').naturalWidth>0,{timeout:20000});
