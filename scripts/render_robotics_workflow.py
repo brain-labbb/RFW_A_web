@@ -85,7 +85,7 @@ def urdf_material(path, link, visual):
     return m
 
 
-def load_urdf(path, joint_values=None, handle=None):
+def load_urdf(path, joint_values=None, handle=None, interior=None):
     joint_values = joint_values or {}
     xml = ET.parse(path).getroot()
     root = empty(path.parent.name)
@@ -105,6 +105,14 @@ def load_urdf(path, joint_values=None, handle=None):
     meshes = []
     for link in xml.findall('link'):
         visuals = [(v, path) for v in link.findall('visual')]
+        if interior and link.get('name') == 'cabinet_body':
+            ip = SOURCE / interior / 'model.urdf'
+            ix = ET.parse(ip).getroot()
+            shelf = ix.find("link[@name='cabinet_body']/visual[@name='shelf_post']")
+            if shelf is None:
+                raise ValueError('Native shelf unit missing: ' + str(ip))
+            visuals.append((shelf, ip))
+            audit['sources'].append(str(ip))
         if handle and link.get('name') == 'curved_door':
             visuals = [(v, p) for v, p in visuals if not v.get('name', '').startswith('knob_')]
             hp = SOURCE / handle / 'model.urdf'
@@ -239,8 +247,8 @@ EDGE = material('Selected asset', (.28, .36, .35), roughness=.6)
 GOLD = material('Recorded cabinet appearance', (.23, .19, .045), roughness=.85)
 
 
-def cabinet(handle=None, gold=False, q=.14):
-    root, meshes, links = load_urdf(SOURCE / 'crown_molding/model.urdf', {'body_to_door': q}, handle)
+def cabinet(handle=None, gold=False, q=.98, interior=None):
+    root, meshes, links = load_urdf(SOURCE / 'crown_molding/model.urdf', {'body_to_door': q}, handle, interior)
     if gold:
         for ob in meshes:
             if ob['visual_name'] in ('shell', 'door_panel', 'plinth', 'crown_molding', 'base_molding'):
@@ -270,6 +278,7 @@ def tile(root, meshes, sx, sy, right, up, size=.8, fixed_scale=None, selected=Fa
 
 
 def retrieval():
+    audit['presentation_door_angle_rad'] = .98
     right, up, cam = camera((1.5, -2.5, 1.6), scale=3.5)
     ids = [
         'satellite_with_articulated_solar_panels__0000',
@@ -306,33 +315,96 @@ def retrieval():
         line('Selected candidate', [forward + right*x + up*y for x, y in points], EDGE, .008)
 
 
+FINISHES = {
+    'walnut': ((.15, .073, .034), (.065, .029, .014), .38, 0),
+    'blue_gray': ((.065, .155, .175), (.040, .085, .095), .40, .22),
+}
+
+
+def finish_cabinet(meshes, finish):
+    if finish == 'target':
+        body = trim = GOLD
+    else:
+        color, trim_color, roughness, metallic = FINISHES[finish]
+        body = material(finish + ' body', color, metallic, roughness)
+        trim = material(finish + ' trim', trim_color, metallic, roughness)
+        if finish == 'walnut':
+            # A restrained procedural wood finish is part of this illustration's
+            # material edit, not an asserted dataset texture assignment.
+            nodes, links = body.node_tree.nodes, body.node_tree.links
+            tex = nodes.new('ShaderNodeTexNoise');tex.inputs['Scale'].default_value = 3
+            mapping = nodes.new('ShaderNodeVectorMath');mapping.operation = 'MULTIPLY'
+            mapping.inputs[1].default_value = (7, 7, .65)
+            coord = nodes.new('ShaderNodeTexCoord')
+            links.new(coord.outputs['Generated'], mapping.inputs[0])
+            links.new(mapping.outputs[0], tex.inputs['Vector'])
+            ramp = nodes.new('ShaderNodeValToRGB')
+            ramp.color_ramp.elements[0].color = (.09, .039, .016, 1)
+            ramp.color_ramp.elements[1].color = (.20, .105, .049, 1)
+            links.new(tex.outputs['Fac'], ramp.inputs[0])
+            links.new(ramp.outputs[0], nodes.get('Principled BSDF').inputs['Base Color'])
+    hardware = material(finish + ' hardware', (.25, .15, .055), .7, .28) if finish == 'blue_gray' else None
+    for ob in meshes:
+        name = ob.get('visual_name', '')
+        replacement = body if name in ('shell', 'door_panel', 'shelf_post') else trim if name in ('plinth', 'crown_molding', 'base_molding') else hardware if name.startswith(('knob_', 'tbar_')) else None
+        if replacement:
+            ob.data.materials.clear();ob.data.materials.append(replacement)
+
+
 def edits():
+    audit['presentation_door_angle_rad'] = .98
     right, up, _ = camera((1.5, -2.5, 1.6), scale=3.25)
     for i, spec in enumerate([
-        {'edit': 'height', 'scale': (1, 1, 1.28)},
-        {'edit': 'radius', 'scale': (1.3, 1.3, 1)},
-        {'edit': 'handle', 'handle': 't_bar'},
-        {'edit': 'material', 'gold': True},
+        {'finish': 'walnut', 'scale': (.96, .96, 1.22), 'handle': 't_bar', 'interior': 'seed_0000'},
+        {'finish': 'walnut', 'scale': (1.25, 1.25, .93)},
+        {'finish': 'blue_gray', 'scale': (1, 1, 1)},
+        {'finish': 'target', 'scale': (1.08, 1.08, 1.06), 'handle': 't_bar'},
     ]):
-        root, meshes, _ = cabinet(handle=spec.get('handle'), gold=spec.get('gold', False))
-        root.scale = spec.get('scale', (1, 1, 1))
+        root, meshes, _ = cabinet(handle=spec.get('handle'), interior=spec.get('interior'))
+        finish_cabinet(meshes, spec['finish'])
+        root.scale = spec['scale']
         tile(root, meshes, -.69 if i % 2 == 0 else .69, .67 if i < 2 else -.67, right, up, fixed_scale=1.5)
         audit['edits'].append(spec)
 
 
-def pose():
+def pose(frame):
     with POSES.open() as f:
         for row in f:
             p = json.loads(row)
-            if p['frame'] == 700:
+            if p['frame'] == frame:
                 return p
     raise ValueError('Pose frame not found')
 
 
+def motion_arrow(center, opening=True):
+    """A 3D arc around the actual vertical door axis, with a tangent arrowhead."""
+    start, end = ((2.35, 3.95) if opening else (3.95, 2.35))
+    radius = .196
+    points = [Vector((center[0] + radius*math.cos(t), center[1] + radius*math.sin(t), .785))
+              for t in [start + (end-start)*i/64 for i in range(65)]]
+    ink = material('Door motion arrow', (.01, .05, .06), roughness=1)
+    shader = ink.node_tree.nodes.new('ShaderNodeEmission')
+    shader.inputs['Color'].default_value = (.025, .09, .105, 1)
+    ink.node_tree.links.new(shader.outputs[0], ink.node_tree.nodes.get('Material Output').inputs['Surface'])
+    line('Door motion arc', points, ink, .0038)
+    tangent = (points[-1]-points[-2]).normalized()
+    length = .032
+    bpy.ops.mesh.primitive_cone_add(vertices=48, radius1=.012, radius2=0, depth=length, location=points[-1]+tangent*length/2)
+    ob = bpy.context.object
+    ob.name = 'Door motion arrowhead'
+    ob.rotation_euler = tangent.to_track_quat('Z', 'Y').to_euler()
+    ob.data.materials.append(ink)
+
+
 def robot_scene(deploy=False):
-    p = pose()
+    frame = 1800 if deploy else 900
+    p = pose(frame)
+    active_side = 'right' if deploy else 'left'
     audit['pose_source'] = str(POSES)
-    audit['pose_frame'] = 700
+    audit['pose_frame'] = frame
+    audit['visible_arm'] = active_side
+    audit['motion_phase'] = 'closing' if deploy else 'opening'
+    graphite = material('Deployment hardware finish', (.025, .031, .035), .3, .37)
     for side, arm in p['arms'].items():
         joints = dict(zip(['joint' + str(i) for i in range(1, 7)], arm['joint_pos_rad']))
         joints.update(dict(zip(['gripper', 'gripper_joint1', 'gripper_joint2'], arm['gripper_joint_pos_m'])))
@@ -341,41 +413,44 @@ def robot_scene(deploy=False):
         root.rotation_mode = 'QUATERNION'
         root.rotation_quaternion = Quaternion(arm['root_quat_wxyz'])
         bpy.context.view_layer.update()
-        # The recording stores the measured rigid-body poses of all fingers.
-        # Record FK consistency and use those measured poses for the gripper visuals.
         checks = {}
         for name, raw in arm['finger_poses'].items():
             checks[name] = (links[name].matrix_world.translation - Vector(raw[:3])).length
             links[name].matrix_world = Matrix.Translation(Vector(raw[:3])) @ Quaternion(raw[3:]).to_matrix().to_4x4()
             bpy.context.view_layer.update()
         audit['robot_pose_checks'][side] = checks
-    root, meshes, _ = cabinet(gold=True, q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
+        for ob in meshes:
+            # Only the working arm is needed in the close-up. The second arm's
+            # recorded pose is still audited, but its idle gripper is hidden.
+            ob.hide_render = side != active_side or (deploy and ob.get('link_name') in ('base_link', 'link1', 'link2'))
+            if deploy:
+                ob.data.materials.clear();ob.data.materials.append(graphite)
+    root, meshes, _ = cabinet(q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
+    finish_cabinet(meshes, 'target' if deploy else 'blue_gray')
     raw = p['mechanism_roots']['round_cabinet_crown_molding']
     root.location, root.scale = raw[:3], (.66,) * 3
     root.rotation_mode = 'QUATERNION'
     root.rotation_quaternion = Quaternion(raw[3:])
-    tabletop = material('Neutral workbench', (.73, .75, .77), roughness=.8)
-    cube('Workbench', (.12, .035, .705), (1.04, .93, .07), tabletop, .009)
-    # The training schematic uses a quiet spatial grid. Deployment keeps the
-    # same asset/robot composition and a plain workbench: these are illustrations.
+    # Contact shadows ground the close-up, without a large table or legs that
+    # compete with the action. No source geometry or recorded pose is altered.
+    bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
+    floor = bpy.context.object;floor.name = 'Contact shadow plane'
+    floor.is_shadow_catcher = True;floor.data.materials.append(WHITE)
     if not deploy:
-        grid = material('Simulation grid', (.43, .48, .51), roughness=.75)
-        for i in range(-4, 6):
-            x = i * .1
-            if -.39 < x < .63:
-                line('Grid X', [(x, -.425, .741), (x, .495, .741)], grid, .0007)
-        for i in range(-4, 5):
-            y = i * .1 + .035
-            line('Grid Y', [(-.39, y, .741), (.63, y, .741)], grid, .0007)
-    else:
-        frame_mat = material('Workbench frame', (.055, .06, .065), metallic=.45)
-        for x in (-.32, .56):
-            for y in (-.36, .43):
-                cube('Table support', (x, y, .56), (.035, .035, .27), frame_mat, .004)
-    # Camera looks toward the cabinet opening (source +X, rotated to world -X).
-    camera((-2.4, 2.0, 1.7), target=(.10, .02, .76), scale=1.6)
+        grid = material('Simulation grid', (.26, .33, .36), roughness=.9)
+        for i in range(-3, 5):
+            x = .347+i*.08
+            line('Grid X', [(x, -.23, .738), (x, .30, .738)], grid, .00065)
+        for i in range(-3, 4):
+            y = .034+i*.08
+            line('Grid Y', [(.08, y, .738), (.64, y, .738)], grid, .00065)
+    motion_arrow(raw[:3], opening=not deploy)
+    camera((-3.0, 2.0, 1.8) if deploy else (-3.0, -.9, 1.8), target=(.30, .025, .945), scale=.70)
     audit['illustration_only'] = True
+    audit['cabinet_finish'] = 'target' if deploy else 'blue_gray'
+    audit['robot_finish'] = 'graphite presentation finish' if deploy else 'original Collada materials'
     audit['target_material_source'] = '/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda'
+
 
 
 {'retrieve': retrieval, 'edit': edits, 'train': lambda: robot_scene(False), 'deploy': lambda: robot_scene(True)}[args.panel]()

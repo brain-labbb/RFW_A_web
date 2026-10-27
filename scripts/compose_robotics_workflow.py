@@ -2,6 +2,8 @@
 Run after render_robotics_workflow.py has produced all four /tmp panels.
 """
 import json
+import hashlib
+import re
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
@@ -70,6 +72,14 @@ def compose():
     arrow(ImageDraw.Draw(mobile), [(x2, FRAME_Y+SIZE+14), (x2, 812), (x1, 812), (x1, second_y-102)])
     mobile.save(MEDIA / 'robotics-flow-mobile.webp', quality=93, method=6)
     mobile.save(TMP / 'robotics-flow-mobile.png')
+    # GitHub Pages can cache unchanged asset URLs between quick revisions.
+    # Content versions keep the inline image and its lightbox in sync.
+    html_path = ROOT / 'index.html'
+    html = html_path.read_text()
+    for name in ('robotics-flow.webp', 'robotics-flow-mobile.webp'):
+        version = hashlib.sha256((MEDIA / name).read_bytes()).hexdigest()[:12]
+        html = re.sub(r'(media/' + re.escape(name) + r')(?:\?v=[a-zA-Z0-9-]+)?', lambda m: m[1] + '?v=' + version, html)
+    html_path.write_text(html)
     audits = [json.loads((TMP / (p+'.json')).read_text()) for p in PANELS]
     checks = [v for a in audits for arm in a['robot_pose_checks'].values() for v in arm.values()]
     if not checks or max(checks) > 1e-5:
