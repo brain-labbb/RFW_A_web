@@ -7,7 +7,9 @@
         "public/models/dataset/Handtools_Paint_roller__0000.glb",
         "public/models/dataset/Astronomy_Mars_rover__0000.glb",
         "public/models/dataset/drawer_cabinet_with_sliding_drawers__0000.glb",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json",
         "public/models/dataset/Healthcare_Prosthetic_limb__0000.glb",
         "public/models/dataset/sewing_machine__0000.glb",
         "public/models/dataset/Playground_swing__0000.glb",
@@ -16,8 +18,32 @@
       "edits": [],
       "robot_pose_checks": {},
       "presentation_door_angle_rad": 0.98,
+      "video_asset_imports": [
+        {
+          "stem": "round_cabinet_crown_molding",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+          "surfaces": [
+            "cabinet_body::base_molding",
+            "cabinet_body::crown_molding",
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::knob_cap",
+            "curved_door::knob_plate",
+            "curved_door::knob_stem",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 0.98,
+          "textures": []
+        }
+      ],
       "render": {
         "blender": "4.2.21 LTS",
+        "engine": "CYCLES",
         "samples": 128,
         "devices": [
           "NVIDIA GeForce RTX 4090"
@@ -27,63 +53,305 @@
     {
       "panel": "edit",
       "sources": [
-        "/opt/isaacsim/sim_asset/round_cabinet/seed_0000/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0000.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0000_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0001.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0001_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_strap_loop.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_strap_loop_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_t_bar.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_t_bar_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json"
       ],
       "edits": [
         {
-          "handle_source": "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.py",
-          "radial_offset_m": 0.025
+          "video_id": "sim_seed0000",
+          "native_asset": "round_cabinet_seed_0000"
         },
         {
-          "finish": "walnut",
-          "scale": [
-            0.96,
-            0.96,
-            1.22
-          ],
-          "handle": "t_bar",
-          "interior": "seed_0000"
+          "video_id": "sim_seed0001",
+          "native_asset": "round_cabinet_seed_0001"
         },
         {
-          "finish": "walnut",
-          "scale": [
-            1.25,
-            1.25,
-            0.93
-          ]
+          "video_id": "sim_strap_loop",
+          "native_asset": "round_cabinet_strap_loop"
         },
         {
-          "finish": "blue_gray",
-          "scale": [
-            1,
-            1,
-            1
-          ]
-        },
-        {
-          "handle_source": "/opt/isaacsim/sim_asset/round_cabinet/t_bar/model.py",
-          "radial_offset_m": 0.025
-        },
-        {
-          "finish": "target",
-          "scale": [
-            1.08,
-            1.08,
-            1.06
-          ],
-          "handle": "t_bar"
+          "video_id": "sim_t_bar",
+          "native_asset": "round_cabinet_t_bar"
         }
       ],
       "robot_pose_checks": {},
       "presentation_door_angle_rad": 0.98,
+      "video_asset_imports": [
+        {
+          "stem": "round_cabinet_seed_0000",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0000.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0000_appearance.usda",
+          "surfaces": [
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shelf_post",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::knob_cap",
+            "curved_door::knob_plate",
+            "curved_door::knob_stem",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 0.98,
+          "textures": [
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/061db49e06e3/base_color.png",
+              "sha256": "541eb05b85b8b5c5742cf33be8032c788f3d58ca37d660a8f91696011f904b44"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/061db49e06e3/normal.png",
+              "sha256": "406ccc47b5ed9a49363d7d529065d07f1ba690bd0e60b66d58a0905a63863ed6"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/061db49e06e3/roughness.png",
+              "sha256": "0ab48052cbe79a43fdbf2013be6cf874ea15c112cd1d9317879f4d97fd9a06ea"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/1fc27fac19da/base_color.png",
+              "sha256": "1114b1a61f562a390ce3226b332494eb687b55359d36528719974d3c00dd2cff"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/1fc27fac19da/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/1fc27fac19da/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/60ad86964087/base_color.png",
+              "sha256": "e65fd7fcf803ba704eb7f32113455780093115d9e66506368942baa50f6c46f4"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/60ad86964087/normal.png",
+              "sha256": "40223056be37d2881144b552d6c448ec6e08afd07a5dc0cde536556858794c83"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0000/assets/textures/pbr/60ad86964087/roughness.png",
+              "sha256": "be28ede01cbe840020fb15c7ead611fc4566ddd391339df7adf5f84a9330c5b2"
+            }
+          ]
+        },
+        {
+          "stem": "round_cabinet_seed_0001",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0001.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_seed_0001_appearance.usda",
+          "surfaces": [
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::handle_bar",
+            "curved_door::handle_post_0",
+            "curved_door::handle_post_1",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 0.98,
+          "textures": [
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/061db49e06e3/base_color.png",
+              "sha256": "541eb05b85b8b5c5742cf33be8032c788f3d58ca37d660a8f91696011f904b44"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/061db49e06e3/normal.png",
+              "sha256": "406ccc47b5ed9a49363d7d529065d07f1ba690bd0e60b66d58a0905a63863ed6"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/061db49e06e3/roughness.png",
+              "sha256": "0ab48052cbe79a43fdbf2013be6cf874ea15c112cd1d9317879f4d97fd9a06ea"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/1fc27fac19da/base_color.png",
+              "sha256": "1114b1a61f562a390ce3226b332494eb687b55359d36528719974d3c00dd2cff"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/1fc27fac19da/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_seed_0001/assets/textures/pbr/1fc27fac19da/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            }
+          ]
+        },
+        {
+          "stem": "round_cabinet_strap_loop",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_strap_loop.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_strap_loop_appearance.usda",
+          "surfaces": [
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::handle_post_0",
+            "curved_door::handle_post_1",
+            "curved_door::handle_strap",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 0.98,
+          "textures": [
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_622556eef217c77d4ed7c42edec54f3032286848b28d3faeb849d87edd1a1de8/base_color.png",
+              "sha256": "8319fa46a6771d3d117aff2f43c8b6f56f8927d83d1038ed5833bea4f5e6124f"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_622556eef217c77d4ed7c42edec54f3032286848b28d3faeb849d87edd1a1de8/normal.png",
+              "sha256": "d09c6fec8d0b7c4eb306364c107acd7ba55a834a29c2b1faac9d7c05edd6a384"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_622556eef217c77d4ed7c42edec54f3032286848b28d3faeb849d87edd1a1de8/roughness.png",
+              "sha256": "354a7b281b915f2d81c44edbdad3e526c646b95933707bcd279f572ed0084393"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/base_color.png",
+              "sha256": "c6c2197c27ec392c6f8afc7dae449949980514f1286e99c8c294c24859d69438"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/metallic.png",
+              "sha256": "bd13affa9d29f90c6654a5489a1cbca86fe56d078ffe77485526ef698952b3e1"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/normal.png",
+              "sha256": "a93abc0f6ed4f42bd1dfb731f84f086edd26e6a8ea22098dece9e71eec0ccce5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/roughness.png",
+              "sha256": "5729509c1ba787dd3f8f65c45bcfa150c10962f68a658ee54241837fd786d6b8"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_e40b462b45b822d6adfb87db870a78ca6fec2e4e8573524f37479e13ea227c4f/normal.png",
+              "sha256": "c0fc3837c074dbc3af7f4c2808c88a0705cbf5a8baf65bf86f07f2ec0eb0f60f"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/mat_e40b462b45b822d6adfb87db870a78ca6fec2e4e8573524f37479e13ea227c4f/roughness.png",
+              "sha256": "748ef983b730d6284a2aad2f85ad71dbf567f030b1691704bad541e06318e023"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_dark_wood/base_color.png",
+              "sha256": "29afe5dd2f9aa20fdc1eba4fde15190e325e23ac9716a8f3064ff558563698d0"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_dark_wood/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_dark_wood/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_light_wood/base_color.png",
+              "sha256": "1114b1a61f562a390ce3226b332494eb687b55359d36528719974d3c00dd2cff"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_light_wood/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_strap_loop/assets/textures/replacement_light_wood/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            }
+          ]
+        },
+        {
+          "stem": "round_cabinet_t_bar",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_t_bar.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_t_bar_appearance.usda",
+          "surfaces": [
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shelf_post",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::tbar_bar",
+            "curved_door::tbar_stem",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 0.98,
+          "textures": [
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_8704f03c167b271a43b4699b919aae05a740a01b87cd341ea89969d08748dc37/normal.png",
+              "sha256": "4e3f3f5ef165b4a42b0997c24a7e946f72679965bfc586eb7296883acd8b1975"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_8704f03c167b271a43b4699b919aae05a740a01b87cd341ea89969d08748dc37/roughness.png",
+              "sha256": "9172e0e76926bb73626c26cb9b1f2042ae2753129a6357d84ec15ba610a6a7cf"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/base_color.png",
+              "sha256": "c6c2197c27ec392c6f8afc7dae449949980514f1286e99c8c294c24859d69438"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/metallic.png",
+              "sha256": "bd13affa9d29f90c6654a5489a1cbca86fe56d078ffe77485526ef698952b3e1"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/normal.png",
+              "sha256": "a93abc0f6ed4f42bd1dfb731f84f086edd26e6a8ea22098dece9e71eec0ccce5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_91e7f2c93715f75bf6edf612682a18b56c259a94302f72d2bb210b54c8bea392/roughness.png",
+              "sha256": "5729509c1ba787dd3f8f65c45bcfa150c10962f68a658ee54241837fd786d6b8"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_f206a778690bcbe3890e502fcd7f3df090efe93f94c464eebe6e0ca660a8ccf6/base_color.png",
+              "sha256": "37c8a8d4e6ce8d21bbb96ead70992e439081fa960d6e53526421f2f722b519f0"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_f206a778690bcbe3890e502fcd7f3df090efe93f94c464eebe6e0ca660a8ccf6/normal.png",
+              "sha256": "0e837bb1aec6427e57c08b576efd151228b5f70bebcd79ebc8f590a75bd82508"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/mat_f206a778690bcbe3890e502fcd7f3df090efe93f94c464eebe6e0ca660a8ccf6/roughness.png",
+              "sha256": "e37bf008860d91616dff2aadba29d1b9714f9d2b463e465de132c0cec5cf96e3"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_dark_wood/base_color.png",
+              "sha256": "29afe5dd2f9aa20fdc1eba4fde15190e325e23ac9716a8f3064ff558563698d0"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_dark_wood/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_dark_wood/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_light_wood/base_color.png",
+              "sha256": "1114b1a61f562a390ce3226b332494eb687b55359d36528719974d3c00dd2cff"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_light_wood/normal.png",
+              "sha256": "7b2c8a049a9e1b9d47d5d53f23293f9615d73f2badcee6e440e2d395a0f777e5"
+            },
+            {
+              "path": "/opt/isaacsim/isaac_route/assets/articulated/source/round_cabinet_t_bar/assets/textures/replacement_light_wood/roughness.png",
+              "sha256": "e16fe2ce1e3ad51273df6cc31b03b1e0d60e0c8b5dd9bbff6ed2757974498997"
+            }
+          ]
+        }
+      ],
       "render": {
         "blender": "4.2.21 LTS",
+        "engine": "CYCLES",
         "samples": 128,
         "devices": [
           "NVIDIA GeForce RTX 4090"
@@ -95,7 +363,9 @@
       "sources": [
         "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
         "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json"
       ],
       "edits": [],
       "robot_pose_checks": {
@@ -114,8 +384,31 @@
       "pose_frame": 900,
       "visible_arm": "left",
       "motion_phase": "opening",
+      "video_asset_imports": [
+        {
+          "stem": "round_cabinet_crown_molding",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+          "surfaces": [
+            "cabinet_body::base_molding",
+            "cabinet_body::crown_molding",
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::knob_cap",
+            "curved_door::knob_plate",
+            "curved_door::knob_stem",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 1.1093130111694336,
+          "textures": []
+        }
+      ],
       "illustration_only": true,
-      "cabinet_finish": "target",
+      "cabinet_finish": "native video USD materials",
       "simulation_grid": false,
       "cabinet_height_scale": 1.0,
       "active_arm_presentation_translation_m": [
@@ -140,7 +433,9 @@
       "sources": [
         "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
         "/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf",
-        "/opt/isaacsim/sim_asset/round_cabinet/crown_molding/model.urdf"
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+        "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+        "/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json"
       ],
       "edits": [],
       "robot_pose_checks": {
@@ -159,8 +454,31 @@
       "pose_frame": 1800,
       "visible_arm": "right",
       "motion_phase": "closing",
+      "video_asset_imports": [
+        {
+          "stem": "round_cabinet_crown_molding",
+          "source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding.usd",
+          "appearance_layer": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
+          "surfaces": [
+            "cabinet_body::base_molding",
+            "cabinet_body::crown_molding",
+            "cabinet_body::foot_ring",
+            "cabinet_body::plinth",
+            "cabinet_body::shell",
+            "curved_door::door_panel",
+            "curved_door::knob_cap",
+            "curved_door::knob_plate",
+            "curved_door::knob_stem",
+            "curved_door::track_pad_0",
+            "curved_door::track_pad_1",
+            "curved_door::track_pad_2"
+          ],
+          "door_angle_rad": 1.0046499967575073,
+          "textures": []
+        }
+      ],
       "illustration_only": true,
-      "cabinet_finish": "target",
+      "cabinet_finish": "native video USD materials",
       "simulation_grid": false,
       "cabinet_height_scale": 0.72,
       "active_arm_presentation_translation_m": [

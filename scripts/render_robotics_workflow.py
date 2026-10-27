@@ -7,6 +7,7 @@ The edit panel illustrates controlled transforms of one source asset, not a new
 experiment. The deployment panel is a schematic, not a photograph of a trial.
 """
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -18,6 +19,9 @@ from mathutils import Matrix, Vector, Euler, Quaternion
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path('/opt/isaacsim/sim_asset/round_cabinet')
+USD_SOURCE = Path('/opt/isaacsim/isaac_route/assets/articulated/generated')
+MATERIAL_REPORT = Path('/opt/isaacsim/end/viewpoint_match_20261013/round_cabinet/material_import_report.json')
+MATERIAL_RECORDS = {r['stem']: r for r in json.loads(MATERIAL_REPORT.read_text())}
 ROBOT = Path('/opt/isaacsim/piper_official_isaac_asset_20260827/official_source/piper_with_gripper.urdf')
 POSES = Path('/opt/isaacsim/end/real_sim_fixed_camera_20261014/round_cabinet/round_cabinet_fixed_camera.jsonl')
 OUT = Path('/tmp/rfw-workflow')
@@ -86,7 +90,7 @@ def urdf_material(path, link, visual):
     return m
 
 
-def load_urdf(path, joint_values=None, handle=None, interior=None):
+def load_urdf(path, joint_values=None):
     joint_values = joint_values or {}
     xml = ET.parse(path).getroot()
     root = empty(path.parent.name)
@@ -106,36 +110,6 @@ def load_urdf(path, joint_values=None, handle=None, interior=None):
     meshes = []
     for link in xml.findall('link'):
         visuals = [(v, path) for v in link.findall('visual')]
-        if interior and link.get('name') == 'cabinet_body':
-            ip = SOURCE / interior / 'model.urdf'
-            ix = ET.parse(ip).getroot()
-            shelf = ix.find("link[@name='cabinet_body']/visual[@name='shelf_post']")
-            if shelf is None:
-                raise ValueError('Native shelf unit missing: ' + str(ip))
-            visuals.append((shelf, ip))
-            audit['sources'].append(str(ip))
-        if handle and link.get('name') == 'curved_door':
-            visuals = [(v, p) for v, p in visuals if not v.get('name', '').startswith('knob_')]
-            hp = SOURCE / handle / 'model.urdf'
-            hx = ET.parse(hp).getroot()
-            handles = [v for v in hx.findall("link[@name='curved_door']/visual") if v.get('name', '').startswith(('tbar_', 'handle_'))]
-            if handle == 't_bar':
-                # Regenerate the two native cylindrical components using the
-                # updated generator's exposed dimensions, translated to this
-                # cabinet's radius (0.210 vs the donor's 0.185 metres).
-                source = (hp.parent / 'model.py').read_text()
-                def param(name):
-                    return float(re.search(r'^' + name + r' = ([0-9.]+)', source, re.M)[1])
-                for v in handles:
-                    stem = v.get('name') == 'tbar_stem'
-                    r = param('TBAR_STEM_R_MID' if stem else 'TBAR_TIP_R') + .025
-                    v.find('origin').set('xyz', f'{r*math.cos(math.radians(-52))} {r*math.sin(math.radians(-52))} 0.289')
-                    c = v.find('geometry/cylinder')
-                    c.set('radius', str(param('TBAR_STEM_RADIUS' if stem else 'TBAR_BAR_RADIUS')))
-                    c.set('length', str(param('TBAR_STEM_LENGTH' if stem else 'TBAR_BAR_LENGTH')))
-                audit['edits'].append({'handle_source': str(hp.parent / 'model.py'), 'radial_offset_m': .025})
-            visuals += [(v, hp) for v in handles]
-            audit['sources'].append(str(hp))
         for visual, vp in visuals:
             geom = visual.find('geometry')
             mesh, box, cyl, sphere = (geom.find(k) for k in ('mesh', 'box', 'cylinder', 'sphere'))
@@ -245,17 +219,57 @@ def camera(direction, target=(0, 0, 0), scale=3.65):
 
 WHITE = material('Porcelain', (.91, .92, .93), roughness=.72)
 EDGE = material('Selected asset', (.28, .36, .35), roughness=.6)
-GOLD = material('Recorded cabinet appearance', (.23, .19, .045), roughness=.85)
 
 
-def cabinet(handle=None, gold=False, q=.98, interior=None):
-    root, meshes, links = load_urdf(SOURCE / 'crown_molding/model.urdf', {'body_to_door': q}, handle, interior)
-    if gold:
-        for ob in meshes:
-            if ob['visual_name'] in ('shell', 'door_panel', 'plinth', 'crown_molding', 'base_molding'):
-                ob.data.materials.clear()
-                ob.data.materials.append(GOLD)
-    return root, meshes, links
+def cabinet(variant='crown_molding', q=.98):
+    """Import the exact composed visual USD used to render the experiment video.
+
+    USD import retains the fixed PBR textures, metric UVs and per-part bindings.
+    MAKE_UNIQUE prevents identically named materials in different assets from
+    being accidentally reused. Physics/collision geometry is invisible in USD.
+    """
+    stem = 'round_cabinet_' + variant
+    source = USD_SOURCE / (stem + '.usd')
+    record = MATERIAL_RECORDS[stem]
+    before = set(bpy.data.objects)
+    bpy.ops.wm.usd_import(filepath=str(source), import_visible_only=True,
+                          import_materials=True, mtl_name_collision_mode='MAKE_UNIQUE')
+    imported = set(bpy.data.objects) - before
+    root = empty(stem)
+    for ob in imported:
+        if ob.parent not in imported:
+            ob.parent = root
+    door = next(o for o in imported if o.name.split('.')[0] == 'curved_door')
+    door.matrix_basis = door.matrix_basis @ Matrix.Rotation(q, 4, 'Z')
+    meshes = [o for o in imported if o.type == 'MESH']
+    bound_surfaces = set()
+    texture_paths = set()
+    for ob in meshes:
+        matches = [re.search(r'original_pbr_(\d+)', m.name) for m in ob.data.materials]
+        if not matches or any(m is None for m in matches):
+            raise ValueError('Unexpected unmapped/collision geometry: ' + ob.name)
+        surface = record['surfaces'][int(matches[0][1])]
+        ob['link_name'], ob['visual_name'] = surface.split('::', 1)
+        ob['workflow_cabinet'] = stem
+        bound_surfaces.add(surface)
+        for mat in ob.data.materials:
+            for node in mat.node_tree.nodes:
+                if node.type == 'TEX_IMAGE' and node.image:
+                    path = Path(bpy.path.abspath(node.image.filepath)).resolve()
+                    if not path.is_file():
+                        raise FileNotFoundError(path)
+                    texture_paths.add(path)
+    if bound_surfaces != set(record['surfaces']):
+        raise ValueError('USD surface bindings do not match the video material report')
+    audit['sources'] += [str(source), record['appearance_layer'], str(MATERIAL_REPORT)]
+    audit.setdefault('video_asset_imports', []).append({
+        'stem': stem, 'source': str(source), 'appearance_layer': record['appearance_layer'],
+        'surfaces': sorted(bound_surfaces), 'door_angle_rad': q,
+        'textures': [{'path': str(p), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()}
+                     for p in sorted(texture_paths)],
+    })
+    bpy.context.view_layer.update()
+    return root, meshes, {'curved_door': door}
 
 
 def tile(root, meshes, sx, sy, right, up, size=.8, fixed_scale=None, selected=False):
@@ -316,56 +330,17 @@ def retrieval():
         line('Selected candidate', [forward + right*x + up*y for x, y in points], EDGE, .008)
 
 
-FINISHES = {
-    'walnut': ((.15, .073, .034), (.065, .029, .014), .38, 0),
-    'blue_gray': ((.065, .155, .175), (.040, .085, .095), .40, .22),
-}
-
-
-def finish_cabinet(meshes, finish):
-    if finish == 'target':
-        body = trim = GOLD
-    else:
-        color, trim_color, roughness, metallic = FINISHES[finish]
-        body = material(finish + ' body', color, metallic, roughness)
-        trim = material(finish + ' trim', trim_color, metallic, roughness)
-        if finish == 'walnut':
-            # A restrained procedural wood finish is part of this illustration's
-            # material edit, not an asserted dataset texture assignment.
-            nodes, links = body.node_tree.nodes, body.node_tree.links
-            tex = nodes.new('ShaderNodeTexNoise');tex.inputs['Scale'].default_value = 3
-            mapping = nodes.new('ShaderNodeVectorMath');mapping.operation = 'MULTIPLY'
-            mapping.inputs[1].default_value = (7, 7, .65)
-            coord = nodes.new('ShaderNodeTexCoord')
-            links.new(coord.outputs['Generated'], mapping.inputs[0])
-            links.new(mapping.outputs[0], tex.inputs['Vector'])
-            ramp = nodes.new('ShaderNodeValToRGB')
-            ramp.color_ramp.elements[0].color = (.09, .039, .016, 1)
-            ramp.color_ramp.elements[1].color = (.20, .105, .049, 1)
-            links.new(tex.outputs['Fac'], ramp.inputs[0])
-            links.new(ramp.outputs[0], nodes.get('Principled BSDF').inputs['Base Color'])
-    hardware = material(finish + ' hardware', (.25, .15, .055), .7, .28) if finish == 'blue_gray' else None
-    for ob in meshes:
-        name = ob.get('visual_name', '')
-        replacement = body if name in ('shell', 'door_panel', 'shelf_post') else trim if name in ('plinth', 'crown_molding', 'base_molding') else hardware if name.startswith(('knob_', 'tbar_')) else None
-        if replacement:
-            ob.data.materials.clear();ob.data.materials.append(replacement)
-
-
 def edits():
     audit['presentation_door_angle_rad'] = .98
     right, up, _ = camera((1.5, -2.5, 1.6), scale=3.25)
-    for i, spec in enumerate([
-        {'finish': 'walnut', 'scale': (.96, .96, 1.22), 'handle': 't_bar', 'interior': 'seed_0000'},
-        {'finish': 'walnut', 'scale': (1.25, 1.25, .93)},
-        {'finish': 'blue_gray', 'scale': (1, 1, 1)},
-        {'finish': 'target', 'scale': (1.08, 1.08, 1.06), 'handle': 't_bar'},
-    ]):
-        root, meshes, _ = cabinet(handle=spec.get('handle'), interior=spec.get('interior'))
-        finish_cabinet(meshes, spec['finish'])
-        root.scale = spec['scale']
-        tile(root, meshes, -.69 if i % 2 == 0 else .69, .67 if i < 2 else -.67, right, up, fixed_scale=1.5)
-        audit['edits'].append(spec)
+    # These are the same four video assets, with no synthetic recoloring,
+    # handle replacement, added shelf or presentation resizing.
+    for i, variant in enumerate(['seed_0000', 'seed_0001', 'strap_loop', 't_bar']):
+        root, meshes, _ = cabinet(variant)
+        tile(root, meshes, -.69 if i % 2 == 0 else .69, .67 if i < 2 else -.67,
+             right, up, fixed_scale=1.5)
+        audit['edits'].append({'video_id': 'sim_' + variant.replace('seed_', 'seed'),
+                               'native_asset': 'round_cabinet_' + variant})
 
 
 def pose(frame):
@@ -435,7 +410,6 @@ def robot_scene(deploy=False):
             if deploy:
                 ob.data.materials.clear();ob.data.materials.append(graphite)
     root, meshes, _ = cabinet(q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
-    finish_cabinet(meshes, 'target')
     raw = p['mechanism_roots']['round_cabinet_crown_molding']
     root.location, root.scale = raw[:3], (.66, .66, .66 * height_scale)
     root.rotation_mode = 'QUATERNION'
@@ -462,7 +436,7 @@ def robot_scene(deploy=False):
     camera((-3.0, 2.0, 2.5) if deploy else (-3.0, -.9, 1.8),
            target=(.30, .025, .90 if deploy else .945), scale=.70)
     audit['illustration_only'] = True
-    audit['cabinet_finish'] = 'target'
+    audit['cabinet_finish'] = 'native video USD materials'
     audit['simulation_grid'] = False
     audit['cabinet_height_scale'] = height_scale
     audit['active_arm_presentation_translation_m'] = [0, 0, arm_offset]
@@ -479,7 +453,12 @@ if args.panel == 'train':
     shading = scene.display.shading
     shading.light = 'FLAT'
     # Match the yellow asset identity in a lighting-independent CAD display.
-    GOLD.diffuse_color = (.56, .47, .19, 1)
+    for obj in scene.objects:
+        if obj.get('workflow_cabinet'):
+            for mat in obj.data.materials:
+                bs = mat.node_tree.nodes.get('Principled BSDF')
+                if bs and bs.inputs['Base Color'].default_value[0] > .1:
+                    mat.diffuse_color = (.56, .47, .19, 1)
     for obj in scene.objects:
         if obj.type == 'MESH' and obj.get('link_name', '').startswith(('link', 'base_', 'gripper', 'flange')):
             for mat in obj.data.materials:

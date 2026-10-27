@@ -59,7 +59,7 @@ function select(task) {
   section.querySelector('#robotics-selection').textContent = task.label;
   section.querySelector('#task-description').textContent = task.description;
   const groups = {};
-  for (const [domain, title, note] of [['sim', 'Simulation', '5 asset variants'], ['real', 'Real world', 'Zero-shot transfer']]) {
+  for (const [domain, title, note] of [['sim', 'Simulation', '1 retrieved + 4 edited'], ['real', 'Real world', 'Zero-shot transfer']]) {
     const group = document.createElement('section');
     group.className = `robotics-domain robotics-domain-${domain}`;
     group.setAttribute('aria-labelledby', `robotics-${domain}-title`);
@@ -72,9 +72,10 @@ function select(task) {
   }
   for (const clip of task.videos) {
     const figure = document.createElement('figure');
+    figure.dataset.role = clip.role;
     if (clip.domain === 'real') figure.className = 'robotics-real';
     const caption = document.createElement('figcaption');
-    caption.textContent = clip.domain === 'sim' ? clip.label.replace('Simulation', 'Asset') : task.label;
+    caption.textContent = clip.domain === 'sim' ? clip.label : task.label;
     const button = document.createElement('button');
     button.className = 'robotics-enlarge';
     button.setAttribute('aria-label', `Enlarge ${task.label}: ${clip.label}`);
@@ -121,7 +122,7 @@ for (const modal of document.querySelectorAll('dialog')) {
 reduced.addEventListener('change', () => {
   if (reduced.matches) { playing = false; updateButton(); videos.forEach(sync); }
 });
-fetch(mediaUrl('data/robotics.json')).then(response => {
+fetch(mediaUrl('data/robotics.json?v=roles-20261027')).then(response => {
   if (!response.ok) throw Error('Recordings unavailable');
   return response.json();
 }).then(data => {

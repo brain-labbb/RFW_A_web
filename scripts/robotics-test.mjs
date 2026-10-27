@@ -32,18 +32,23 @@ for(const task of data.tasks){
  await p.locator('#robotics-replay').click();
  await p.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].every(v=>v.readyState>=2&&v.currentTime>0&&!v.paused),{},{timeout:30000});
  ok(`${task.label}: all six videos decode and play`,await p.locator('#robotics-grid video').count()===6);
+ const labels=await p.locator('.robotics-domain-sim figcaption').allTextContents();
+ ok(`${task.label}: retrieval and four edits are labeled`,labels.slice().sort().join('|')==='Edited 1|Edited 2|Edited 3|Edited 4|Retrieved'&&await p.locator('.robotics-domain-sim figure[data-role="retrieved"]').count()===1&&await p.locator('.robotics-domain-sim figure[data-role="edited"]').count()===4);
  ok(`${task.label}: selected task and real target match`,await p.locator(`[data-task="${task.id}"]`).getAttribute('aria-pressed')==='true'&&await p.locator('.robotics-real video').getAttribute('data-src').then(s=>s.includes(`/${task.id}/real.`)));
  await p.locator('#robotics-play').click();
  ok(`${task.label}: shared pause stops all six`,await p.locator('#robotics-grid video').evaluateAll(vs=>vs.every(v=>v.paused)));
  await p.locator('#sim2real').screenshot({path:`/tmp/rfw-robotics/${task.id}-desktop.png`,style:'.header{visibility:hidden}'});
 }
 await p.locator('[data-task="round_cabinet"]').click();await p.locator('#robotics-replay').click();
+await p.locator('.robotics-domain-sim figure[data-role="retrieved"] .robotics-enlarge').click();
+ok('Enlarged retrieved clip retains its role',await p.locator('#robotics-dialog-title').textContent()==='Cabinet · Retrieved');
+await p.keyboard.press('Escape');await p.waitForFunction(()=>{const d=document.querySelector('#robotics-dialog'),v=d.querySelector('video');return !d.open&&v.paused&&!v.hasAttribute('src');});
 await p.locator('.robotics-real .robotics-enlarge').click();
 await p.waitForFunction(()=>{const v=document.querySelector('#robotics-dialog video');return v.currentTime>0&&!v.paused;},{},{timeout:30000});
 ok('Enlarged real recording plays with native controls',await p.locator('#robotics-dialog video').evaluate(v=>v.controls&&v.muted));
 ok('Enlarged title omits speed',!(await p.locator('#robotics-dialog-title').textContent()).includes('×'));
 ok('Enlarging pauses the gallery',await p.locator('#robotics-grid video').evaluateAll(vs=>vs.every(v=>v.paused)));
-await p.keyboard.press('Escape');ok('Escape closes and unloads enlarged recording',await p.locator('#robotics-dialog video').evaluate(v=>v.paused&&!v.hasAttribute('src')));
+await p.keyboard.press('Escape');await p.waitForFunction(()=>{const d=document.querySelector('#robotics-dialog'),v=d.querySelector('video');return !d.open&&v.paused&&!v.hasAttribute('src');});ok('Escape closes and unloads enlarged recording',await p.locator('#robotics-dialog video').evaluate(v=>v.paused&&!v.hasAttribute('src')));
 await p.locator('#robotics-grid').scrollIntoViewIfNeeded();await p.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].some(v=>!v.paused));
 await p.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await p.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].every(v=>v.paused));ok('Offscreen gallery pauses playback',true);
 await p.locator('#robotics-grid').scrollIntoViewIfNeeded();await p.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].every(v=>!v.paused));ok('Returning to view resumes playback automatically',true);

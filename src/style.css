@@ -65,3 +65,6 @@ input[type=range]{accent-color:var(--accent)}
 /* AI-generated explanatory workflow, with a two-row adaptation for small screens. */
 .robotics-flow{display:block;position:relative;width:100%;padding:0;margin:0 auto 28px;background:white;border-radius:4px}.robotics-flow img{width:100%;height:auto}.robotics-flow>span{display:block;text-align:right;font-size:11px;color:var(--muted);margin-top:8px}.robotics-flow:hover>span{text-decoration:underline}.robotics-section>.section-heading{margin-bottom:18px}
 @media(max-width:760px){.robotics-flow{margin-bottom:24px}.robotics-flow>span{font-size:10px}}
+
+.robotics-domain-sim figure[data-role="retrieved"]{border-color:var(--ink)}
+.robotics-domain-sim figure[data-role="retrieved"] figcaption{font-weight:600}

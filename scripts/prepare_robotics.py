@@ -1,6 +1,7 @@
 """Encode all 30 supplied robotics recordings; verify sources and preserve full timelines."""
 import concurrent.futures, hashlib, json, subprocess
 from pathlib import Path
+from robotics_roles import apply_roles
 ROOT=Path(__file__).resolve().parents[1]
 SOURCE=Path('/opt/isaacsim/end/real_sim_final_20261014')
 OUT=ROOT/'public/media/robotics';OUT.mkdir(parents=True,exist_ok=True)
@@ -34,6 +35,7 @@ for key,label,description in TASKS:
   v['label']=f'Simulation {i+1:02}' if v['domain']=='sim' else 'Real world'
  tasks.append({'id':key,'label':label,'description':description,'videos':group})
 data={'tasks':tasks,'results':[{'setting':'Retrieval','assets':1,'edits':0,'successes':[5,7,8,7,4],'average':62},{'setting':'Retrieval + 4 Edit','assets':5,'edits':4,'successes':[7,7,8,8,6],'average':72},{'setting':'Retrieval + 9 Edit','assets':10,'edits':9,'successes':[8,8,8,9,7],'average':80}],'demonstrations_per_task':500,'trials_per_task':10}
+apply_roles(data)
 (ROOT/'public/data/robotics.json').write_text(json.dumps(data,indent=2)+'\n')
 (AUDIT/'media-audit.json').write_text(json.dumps({'source':str(SOURCE),'count':len(clips),'clips':clips},indent=2))
 print('Verified all 30 sources and encoded full-length accelerated previews.',flush=True)
