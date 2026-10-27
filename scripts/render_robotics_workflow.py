@@ -3,8 +3,8 @@
 Blender 4.2 (Collada importer required). Example:
 CUDA_VISIBLE_DEVICES=0 blender -b -t 8 --python scripts/render_robotics_workflow.py -- retrieve
 All source assets are read-only; intermediate images/scenes/audits go to /tmp.
-The edit panel shows native experiment assets in an illustrative arrangement.
-The deployment panel is a schematic, not a photograph of a trial.
+The edit panel illustrates controlled transforms of one source asset, not a new
+experiment. The deployment panel is a schematic, not a photograph of a trial.
 """
 import argparse
 import hashlib
@@ -268,19 +268,6 @@ def cabinet(variant='crown_molding', q=.98):
         'textures': [{'path': str(p), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()}
                      for p in sorted(texture_paths)],
     })
-    if variant == 'crown_molding':
-        # Color-managed Blender reproduction of the delivered Isaac appearance:
-        # preserve the source USD on disk; compensate for different lighting and
-        # display pipelines only in this illustration's imported coating shader.
-        for mat in {m for ob in meshes for m in ob.data.materials}:
-            bs = mat.node_tree.nodes.get('Principled BSDF')
-            if bs and bs.inputs['Base Color'].default_value[0] > .1:
-                bs.inputs['Base Color'].default_value = (.27, .265, .085, 1)
-        audit['yellow_display_calibration'] = {
-            'source_linear_rgb': [.23, .19, .045],
-            'blender_linear_rgb': [.27, .265, .085],
-            'reference': 'delivered sim_crown_molding.mp4; appearance match, not a new material',
-        }
     bpy.context.view_layer.update()
     return root, meshes, {'curved_door': door}
 
@@ -346,21 +333,10 @@ def retrieval():
 def edits():
     audit['presentation_door_angle_rad'] = .98
     right, up, _ = camera((1.5, -2.5, 1.6), scale=3.25)
-    # Native video geometries; the last variant adds a user-requested finish
-    # edit for this workflow illustration. It is not a new recorded trial.
+    # These are the same four video assets, with no synthetic recoloring,
+    # handle replacement, added shelf or presentation resizing.
     for i, variant in enumerate(['seed_0000', 'seed_0001', 'strap_loop', 't_bar']):
         root, meshes, _ = cabinet(variant)
-        if variant == 't_bar':
-            finish = material('Illustrative muted blue enamel', (.045, .12, .17), metallic=.12, roughness=.32)
-            for ob in meshes:
-                if ob.get('visual_name') in ('shell', 'plinth', 'foot_ring', 'shelf_post', 'door_panel'):
-                    ob.data.materials.clear()
-                    ob.data.materials.append(finish)
-            audit['illustrative_material_edit'] = {
-                'asset': 'round_cabinet_t_bar', 'finish': 'muted blue enamel',
-                'scope': 'workflow illustration only; source USD and video unchanged',
-                'linear_rgb': [.045, .12, .17], 'metallic': .12, 'roughness': .32,
-            }
         tile(root, meshes, -.69 if i % 2 == 0 else .69, .67 if i < 2 else -.67,
              right, up, fixed_scale=1.5)
         audit['edits'].append({'video_id': 'sim_' + variant.replace('seed_', 'seed'),
@@ -409,7 +385,7 @@ def robot_scene(deploy=False):
     knob_origin = source_xml.find("link[@name='curved_door']/visual[@name='knob_cap']/origin")
     handle_height = vec(knob_origin.get('xyz'))[2]
     arm_offset = .66 * handle_height * (height_scale - 1)
-    hardware = material('Native Isaac Piper finish', (.018, .022, .028), .0, .5)
+    graphite = material('Deployment hardware finish', (.025, .031, .035), .3, .37)
     for side, arm in p['arms'].items():
         joints = dict(zip(['joint' + str(i) for i in range(1, 7)], arm['joint_pos_rad']))
         joints.update(dict(zip(['gripper', 'gripper_joint1', 'gripper_joint2'], arm['gripper_joint_pos_m'])))
@@ -430,9 +406,9 @@ def robot_scene(deploy=False):
         for ob in meshes:
             # Only the working arm is needed in the close-up. The second arm's
             # recorded pose is still audited, but its idle gripper is hidden.
-            ob.data.materials.clear()
-            ob.data.materials.append(hardware)
             ob.hide_render = side != active_side or (deploy and ob.get('link_name') in ('base_link', 'link1', 'link2'))
+            if deploy:
+                ob.data.materials.clear();ob.data.materials.append(graphite)
     root, meshes, _ = cabinet(q=p['joints']['round_cabinet_crown_molding']['body_to_door'])
     raw = p['mechanism_roots']['round_cabinet_crown_molding']
     root.location, root.scale = raw[:3], (.66, .66, .66 * height_scale)
@@ -449,35 +425,55 @@ def robot_scene(deploy=False):
                     matrix[2][j] /= height_scale
                 ob.matrix_world = matrix
         bpy.context.view_layer.update()
-    # No visible tabletop or grid. Deployment alone has a soft contact shadow
-    # on an invisible catcher to distinguish it from the clean simulation view.
-    if deploy:
-        bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
-        floor = bpy.context.object
-        floor.name = 'Invisible deployment shadow catcher'
-        floor.is_shadow_catcher = True
-        floor.data.materials.append(WHITE)
+    # Contact shadows ground the close-up, without a large table or legs that
+    # compete with the action. The deployment height and active forearm offset
+    # are presentation changes, not a reconstruction of real experiment poses.
+    bpy.ops.mesh.primitive_plane_add(size=200, location=(0, 0, .737))
+    floor = bpy.context.object;floor.name = 'Contact shadow plane'
+    floor.is_shadow_catcher = True;floor.data.materials.append(WHITE)
+    floor.hide_render = not deploy
     motion_arrow(raw[:3], opening=not deploy)
     camera((-3.0, 2.0, 2.5) if deploy else (-3.0, -.9, 1.8),
            target=(.30, .025, .90 if deploy else .945), scale=.70)
-    audit['tabletop'] = False
-    audit['contact_shadow'] = deploy
     audit['illustration_only'] = True
-    audit['cabinet_finish'] = 'native video USD materials with documented Blender display calibration'
+    audit['cabinet_finish'] = 'native video USD materials'
     audit['simulation_grid'] = False
     audit['cabinet_height_scale'] = height_scale
     audit['active_arm_presentation_translation_m'] = [0, 0, arm_offset]
-    audit['presentation_style'] = 'physical deployment schematic' if deploy else 'shaded simulation schematic'
-    audit['robot_finish'] = 'Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)'
-    audit['robot_material_source'] = '/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd'
-    audit['robot_diffuse_linear_rgb'] = [.018, .022, .028]
+    audit['presentation_style'] = 'physical deployment schematic' if deploy else 'technical viewport'
+    audit['robot_finish'] = 'graphite presentation finish' if deploy else 'original Collada materials'
     audit['target_material_source'] = '/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda'
 
 
 
 {'retrieve': retrieval, 'edit': edits, 'train': lambda: robot_scene(False), 'deploy': lambda: robot_scene(True)}[args.panel]()
 scene = bpy.context.scene
-scene.render.engine = 'CYCLES'
+scene.render.engine = 'BLENDER_WORKBENCH' if args.panel == 'train' else 'CYCLES'
+if args.panel == 'train':
+    shading = scene.display.shading
+    shading.light = 'FLAT'
+    # Match the yellow asset identity in a lighting-independent CAD display.
+    for obj in scene.objects:
+        if obj.get('workflow_cabinet'):
+            for mat in obj.data.materials:
+                bs = mat.node_tree.nodes.get('Principled BSDF')
+                if bs and bs.inputs['Base Color'].default_value[0] > .1:
+                    mat.diffuse_color = (.56, .47, .19, 1)
+    for obj in scene.objects:
+        if obj.type == 'MESH' and obj.get('link_name', '').startswith(('link', 'base_', 'gripper', 'flange')):
+            for mat in obj.data.materials:
+                mat.diffuse_color = (.30, .34, .38, 1)
+    shading.color_type = 'MATERIAL'
+    shading.show_shadows = False
+    shading.show_cavity = True
+    shading.cavity_type = 'WORLD'
+    shading.cavity_ridge_factor = 1.2
+    shading.cavity_valley_factor = 1.4
+    shading.curvature_ridge_factor = 1.2
+    shading.curvature_valley_factor = 1.0
+    shading.show_object_outline = True
+    shading.object_outline_color = (.06, .08, .09)
+    scene.display.render_aa = '32'
 scene.cycles.samples = 24 if args.preview else 128
 scene.cycles.use_denoising = True
 prefs = bpy.context.preferences.addons['cycles'].preferences
@@ -488,8 +484,8 @@ for d in prefs.devices:
 scene.cycles.device = 'GPU'
 scene.world = bpy.data.worlds.new('Soft studio')
 scene.world.use_nodes = True
-scene.world.node_tree.nodes['Background'].inputs[0].default_value = (1.0, 1.0, 1.0, 1)
-scene.world.node_tree.nodes['Background'].inputs[1].default_value = 1.0
+scene.world.node_tree.nodes['Background'].inputs[0].default_value = (.82, .86, .90, 1)
+scene.world.node_tree.nodes['Background'].inputs[1].default_value = .65
 robot = args.panel in ('train', 'deploy')
 center = Vector((.1, .02, 1.0) if robot else (0, 0, 0))
 scale = .6 if robot else 1.5
@@ -504,12 +500,11 @@ scene.render.resolution_x = 720 if args.preview else 1280
 scene.render.resolution_y = scene.render.resolution_x
 scene.render.resolution_percentage = 100
 scene.render.film_transparent = True
-scene.view_settings.view_transform = 'Khronos PBR Neutral'
-scene.view_settings.exposure = .5
+scene.view_settings.view_transform = 'AgX'
 scene.render.image_settings.file_format = 'PNG'
 scene.render.image_settings.color_mode = 'RGBA'
 scene.render.filepath = str(OUT / (args.panel + '.png'))
-audit['render'] = {'blender': bpy.app.version_string, 'engine': scene.render.engine, 'samples': scene.cycles.samples, 'view_transform': scene.view_settings.view_transform, 'exposure': scene.view_settings.exposure, 'devices': [d.name for d in prefs.devices if d.use]}
+audit['render'] = {'blender': bpy.app.version_string, 'engine': scene.render.engine, 'samples': 32 if args.panel == 'train' else scene.cycles.samples, 'devices': ['OpenGL/EGL viewport'] if args.panel == 'train' else [d.name for d in prefs.devices if d.use]}
 (OUT / (args.panel + '.json')).write_text(json.dumps(audit, indent=2))
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT / (args.panel + '.blend')))
 bpy.ops.render.render(write_still=True)

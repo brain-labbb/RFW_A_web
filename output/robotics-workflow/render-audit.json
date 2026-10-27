@@ -41,25 +41,10 @@
           "textures": []
         }
       ],
-      "yellow_display_calibration": {
-        "source_linear_rgb": [
-          0.23,
-          0.19,
-          0.045
-        ],
-        "blender_linear_rgb": [
-          0.27,
-          0.265,
-          0.085
-        ],
-        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
-      },
       "render": {
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
-        "view_transform": "Khronos PBR Neutral",
-        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]
@@ -364,24 +349,10 @@
           ]
         }
       ],
-      "illustrative_material_edit": {
-        "asset": "round_cabinet_t_bar",
-        "finish": "muted blue enamel",
-        "scope": "workflow illustration only; source USD and video unchanged",
-        "linear_rgb": [
-          0.045,
-          0.12,
-          0.17
-        ],
-        "metallic": 0.12,
-        "roughness": 0.32
-      },
       "render": {
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
-        "view_transform": "Khronos PBR Neutral",
-        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]
@@ -436,23 +407,8 @@
           "textures": []
         }
       ],
-      "yellow_display_calibration": {
-        "source_linear_rgb": [
-          0.23,
-          0.19,
-          0.045
-        ],
-        "blender_linear_rgb": [
-          0.27,
-          0.265,
-          0.085
-        ],
-        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
-      },
-      "tabletop": false,
-      "contact_shadow": false,
       "illustration_only": true,
-      "cabinet_finish": "native video USD materials with documented Blender display calibration",
+      "cabinet_finish": "native video USD materials",
       "simulation_grid": false,
       "cabinet_height_scale": 1.0,
       "active_arm_presentation_translation_m": [
@@ -460,23 +416,15 @@
         0,
         0.0
       ],
-      "presentation_style": "shaded simulation schematic",
-      "robot_finish": "Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)",
-      "robot_material_source": "/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd",
-      "robot_diffuse_linear_rgb": [
-        0.018,
-        0.022,
-        0.028
-      ],
+      "presentation_style": "technical viewport",
+      "robot_finish": "original Collada materials",
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
-        "engine": "CYCLES",
-        "samples": 128,
-        "view_transform": "Khronos PBR Neutral",
-        "exposure": 0.5,
+        "engine": "BLENDER_WORKBENCH",
+        "samples": 32,
         "devices": [
-          "NVIDIA GeForce RTX 4090"
+          "OpenGL/EGL viewport"
         ]
       }
     },
@@ -529,23 +477,8 @@
           "textures": []
         }
       ],
-      "yellow_display_calibration": {
-        "source_linear_rgb": [
-          0.23,
-          0.19,
-          0.045
-        ],
-        "blender_linear_rgb": [
-          0.27,
-          0.265,
-          0.085
-        ],
-        "reference": "delivered sim_crown_molding.mp4; appearance match, not a new material"
-      },
-      "tabletop": false,
-      "contact_shadow": true,
       "illustration_only": true,
-      "cabinet_finish": "native video USD materials with documented Blender display calibration",
+      "cabinet_finish": "native video USD materials",
       "simulation_grid": false,
       "cabinet_height_scale": 0.72,
       "active_arm_presentation_translation_m": [
@@ -554,20 +487,12 @@
         -0.0534072
       ],
       "presentation_style": "physical deployment schematic",
-      "robot_finish": "Isaac USD diffuse_color_constant (0.018, 0.022, 0.028)",
-      "robot_material_source": "/opt/isaacsim/piper_official_isaac_asset_20260827/isaac_usd/piper.usd",
-      "robot_diffuse_linear_rgb": [
-        0.018,
-        0.022,
-        0.028
-      ],
+      "robot_finish": "graphite presentation finish",
       "target_material_source": "/opt/isaacsim/isaac_route/assets/articulated/generated/round_cabinet_crown_molding_appearance.usda",
       "render": {
         "blender": "4.2.21 LTS",
         "engine": "CYCLES",
         "samples": 128,
-        "view_transform": "Khronos PBR Neutral",
-        "exposure": 0.5,
         "devices": [
           "NVIDIA GeForce RTX 4090"
         ]
