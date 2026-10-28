@@ -49,7 +49,7 @@ def check(asset):
 
 if __name__=='__main__':
     manifest=json.loads((ROOT/'public/data/explorer.json').read_text())
-    assert len(manifest['families'])==31 and len(manifest['assets'])==186
+    assert len(manifest['families'])==30 and len(manifest['assets'])==180
     by_id={a['id']:a for a in manifest['assets']}
     excluded=json.loads((ROOT/'scripts/explorer_exclusions.json').read_text())
     assert not (set(by_id) & set(excluded['samples']))

@@ -19,8 +19,8 @@ ok('Only 2D previews load before an asset is selected',!requests.some(r=>r.inclu
 ok('Explore this scene is retained; the two hero buttons are removed',await page.locator('#hero-explore').getAttribute('href')==='#worlds'&&await page.locator('.hero-actions .hero-link').count()===0);
 ok('Scene 3D links have been retired',await page.locator('#scene-object-3d,#scene-browse').count()===0);
 await page.locator('#gx-more').click();
-ok('All 31 new categories are available',await page.locator('[data-category]').count()===31);
-ok('The entire blinds category is withdrawn',manifest.assets.length===186&&!manifest.assets.some(a=>a.category==='Curtain_blind')&&!manifest.families.some(f=>f.id==='Curtain_blind')&&await page.locator('[data-category="Curtain_blind"]').count()===0);
+ok('All 30 new categories are available',await page.locator('[data-category]').count()===30);
+ok('The entire blinds category is withdrawn',manifest.assets.length===180&&!manifest.assets.some(a=>a.category==='Curtain_blind')&&!manifest.families.some(f=>f.id==='Curtain_blind')&&await page.locator('[data-category="Curtain_blind"]').count()===0);
 await page.locator('#gx-search').fill('headphones');
 ok('Category search finds headphones',await page.locator('[data-category]').count()===1);
 await page.locator('#gx-search').fill('no category matches');

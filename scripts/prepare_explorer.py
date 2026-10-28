@@ -27,7 +27,6 @@ EXCLUSIONS = json.loads((ROOT / 'scripts/explorer_exclusions.json').read_text())
 SELECTION = [
     ('Handtools_Clamp', 'Screw clamps', 'Tools'),
     ('Handtools_dial_caliper', 'Calipers', 'Tools'),
-    ('rivet_squeeze1', 'Rivet squeezers', 'Tools'),
     ('pictureX_0611_Air_blower', 'Air blowers', 'Tools'),
     ('sewing_machine', 'Sewing machines', 'Home'),
     ('watch', 'Watches', 'Everyday'),
@@ -80,7 +79,6 @@ LINEAGE_KEYS = {
     'pictureX_0611_Air_blower': '0611airblower',
     'pictureX_0611_compass': '0611compass',
     'pictureX_0611_full_height_turnstile': '0611fullheightturnstile',
-    'rivet_squeeze1': '0611rivetsqueeze1',
     'watch': '0611watch',
     'sewing_machine': 'textilesfabricsewingmachine',
     'universal_joint': '0611universaljoint',
@@ -278,7 +276,7 @@ def main():
 
     families, assets, audit = [], [], []
     for category, name, domain in SELECTION:
-        if len(families) == 31:
+        if len(families) == 30:
             break
         if category in EXCLUSIONS['categories']:
             continue
@@ -318,7 +316,7 @@ def main():
                              availableSeeds=len(seeds)))
         print('READY', category, [a['seed'] for a in members], flush=True)
         (WORK/'selection-progress.json').write_text(json.dumps(dict(families=families, assets=assets)))
-    expected = {'Handtools_Clamp', 'Handtools_dial_caliper', 'rivet_squeeze1', 'pictureX_0611_Air_blower',
+    expected = {'Handtools_Clamp', 'Handtools_dial_caliper', 'pictureX_0611_Air_blower',
                 'sewing_machine', 'watch', 'pictureX_0611_compass', 'Music_Headphone', 'Music_Amplifier',
                 'Technology_Audio_Device', 'Music_keyboard', 'universal_joint', 'Technology_Flashlight',
                 'Astronomy_Astronaut_helmet', 'Accessories_glasses', 'Bag_Suitcase_Suitcase',
@@ -327,7 +325,7 @@ def main():
                 'Equipment_Lock', 'Equipment_LED_work_light', 'Others_Binocular', 'Other_Folding_screen',
                 'Military_helicopter', 'Light_Latern', 'Urban_Environment_Tilt_Truck'}
     chosen = {f['id'] for f in families}
-    if len(families) != 31 or chosen != expected:
+    if len(families) != 30 or chosen != expected:
         raise SystemExit(f'Unexpected selection: {len(families)} families, missing {sorted(expected - chosen)}, extra {sorted(chosen - expected)}')
     manifest = dict(release=dict(assets=402410,categories=531), families=families, assets=assets,
                     source='PV_A_vlm/assets', scope='Curated image-grounded generator families')
