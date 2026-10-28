@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[1];TMP=Path('/tmp/rfw-scenes');PUB=ROOT/'p
 shots=json.loads((ROOT/'scripts/scene_shots.json').read_text());catalog={a['id']:a for a in json.loads((PUB/'data/catalog.json').read_text())}
 names={'asset_90_hero_toaster_6664610a':'Toaster','cabinet_rig_three_drawer_2fce3abe':'Drawer cabinet','asset_25_piano_7c8af708':'Piano','ferris_wheel_594ea2e6':'Ferris wheel','swing_0970_placement_504d4cae':'Swing','tower_crane_ccb3c33d':'Tower crane','v03_satellite_articulated_508d3d52':'Satellite','urdf_08_antenna_dish_001_8494e9b1':'Antenna dish','urdf_12_rotating_observatory_dome_4c3d10d5':'Observatory dome','robot_dog_placement_b3ab1056':'Robot dog','robot_dexterous_placement_150223ae':'Dexterous robot','desk_microscope_placement_162ffbd1':'Microscope'}
 names.update({
+ 'scene7_car_rec_qwen37v_car002_v11_2_6c3a7e60':'Sports car',
  'asset_13_refrigerator_with_hinged_doors_35af1266':'Refrigerator',
  'asset_15_dishwasher_with_dropdown_door_and_sliding_racks_cfd7dc9f':'Dishwasher',
  'asset_21_washmachine_2e9d4f84':'Washing machine',
