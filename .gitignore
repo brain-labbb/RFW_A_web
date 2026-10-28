@@ -6,3 +6,4 @@ dist
 offline/
 /tmp/
 __pycache__/
+MUJOCO_LOG.TXT

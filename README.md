@@ -28,7 +28,7 @@ Replace each `null` with its public HTTPS URL and rebuild. The three hero resour
 ## Included content
 
 - Four scene videos and the supplied 2:24 film, with MP4 and WebM playback versions.
-- One unified asset explorer: 31 image-grounded category generators, six source seeds each (186 assets), input images, 2D preview cards, selectable parts, source physics, and on-demand MuJoCo simulation. All samples are reselected directly from `PV_A_vlm`.
+- One unified asset explorer: 31 image-grounded category families, six source seeds each (186 assets), input images, 2D preview cards, selectable parts, source physics, and on-demand MuJoCo simulation. All samples are reselected directly from `PV_A_vlm`. The tilt-truck family combines two source generator variants (2+4 seeds).
 - Scene walkthroughs retain their images, videos, object selection, and physical-property panels. The old standalone scene-asset 3D viewer and its two scene links are retired.
 - Four directed-editing comparisons using existing generator outputs.
 - A generator-cost calculator using the paper's $10.62 authoring estimate and $1.237 per-asset baseline. Compute cost is excluded.
@@ -71,7 +71,7 @@ Existing source physics records were examined first; 57/84 assets have source-se
 
 ### Unified asset explorer
 
-The gallery uses **31 categories × 6 seeds = 186 assets** from `/data/oss_bucket_0/yuanbo/PV_A_vlm/assets`. Input images come from `/home/lyuyuanbo.lyb/PVA/articraft_data/picture`. Source maps explicitly associate these images with the generator's upstream examples; each selected seed has the exact SHA-256 of the local category template. Multiple source images are exposed with small image buttons. `Input image` refers to a generator reference, not to a claim that each seed independently reconstructs that image.
+The gallery uses **31 categories × 6 seeds = 186 assets** from `/data/oss_bucket_0/yuanbo/PV_A_vlm/assets`. Input images come from `/home/lyuyuanbo.lyb/PVA/articraft_data/picture`. Source maps explicitly associate these images with the generator's upstream examples, citing the picture library under its historical `picture/`, `pictureX/` or `pictureY/` roots; three record-derived families (Astronaut helmets, Return capsules, Helicopters) instead pair the matching picture subclass folder with the modular spec as the recorded lineage. Each selected seed has the exact SHA-256 of the local category template. Multiple source images are exposed with small image buttons. `Input image` refers to a generator reference, not to a claim that each seed independently reconstructs that image.
 
 Only images and the compact manifest load initially. Clicking a seed loads one GLB and its source property record. `Simulate` loads the engine and that seed's MJCF. All URDF links have buttons below the viewer, including fixed parts. Clicking a mesh selects its link; the surface selector exposes its material annotations. Joint sliders honor mimic dependencies. The engine supports run/pause/reset, gravity, and brief positive/negative joint-force pulses. Selection and shared URLs remain within this same exhibit.
 

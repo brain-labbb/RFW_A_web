@@ -56,7 +56,8 @@ if __name__=='__main__':
     assert not ({a['category'] for a in manifest['assets']} & set(excluded['categories']))
     for family in manifest['families']:
         assert len(family['samples'])==6
-        assert {by_id[i]['templateHash'] for i in family['samples']}=={family['templateHash']}
+        expected=set(family.get('templateHashes',{}).values()) or {family['templateHash']}
+        assert {by_id[i]['templateHash'] for i in family['samples']}==expected
         assert family['inputs']
         for item in family['inputs']:assert (ROOT/'public'/item['image']).is_file()
     with ProcessPoolExecutor(max_workers=6) as pool:results=list(pool.map(check,manifest['assets']))

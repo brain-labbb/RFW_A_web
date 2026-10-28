@@ -159,6 +159,29 @@ def convert(a):
     compiled=mujoco.MjModel.from_xml_string(text)
     data=mujoco.MjData(compiled)
     for _ in range(50):mujoco.mj_step(compiled,data)
+    unstable=not np.all(np.isfinite(data.qpos)) or (compiled.nv>0 and float(np.max(np.abs(data.qvel)))>100)
+    if unstable:
+        # Some source collision sets interpenetrate at spawn between nonadjacent bodies
+        # (e.g. a drive shaft running through a coaxial fan rotor hub); contact impulses
+        # on gram-scale links then explode. Exclude those body pairs and record the
+        # repair. Assets that pass the smoke rollout are never modified.
+        contact=model.find('contact')
+        existing={frozenset((e.get('body1'),e.get('body2'))) for e in contact.findall('exclude')}
+        probe=mujoco.MjData(compiled);mujoco.mj_forward(compiled,probe)
+        excluded=set()
+        for i in range(probe.ncon):
+            c=probe.contact[i]
+            if c.dist>=-2e-4:continue
+            names=tuple(mujoco.mj_id2name(compiled,mujoco.mjtObj.mjOBJ_BODY,int(compiled.geom_bodyid[g])) for g in (c.geom1,c.geom2))
+            key=frozenset(names)
+            if key in existing or key in excluded:continue
+            ET.SubElement(contact,'exclude',body1=names[0],body2=names[1]);excluded.add(key)
+            collision_repairs.append(dict(link=names[0],collision=names[1],kind='spawn_interpenetration_contact_excluded',depth=float(-c.dist)))
+        if excluded:
+            text=ET.tostring(model,encoding='unicode')
+            compiled=mujoco.MjModel.from_xml_string(text)
+            data=mujoco.MjData(compiled)
+            for _ in range(50):mujoco.mj_step(compiled,data)
     if not np.all(np.isfinite(data.qpos)):raise ValueError('Nonfinite smoke rollout')
     out=ROOT/'public'/a['simulation'];temporary=out.with_suffix(f'.{os.getpid()}.tmp');temporary.write_text(text);temporary.replace(out)
     details_path=ROOT/'public'/a['details'];details=json.loads(details_path.read_text())

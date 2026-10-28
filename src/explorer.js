@@ -9,7 +9,7 @@ const number = value => Number.isFinite(value) ? Number(value.toPrecision(4)).to
 const unit = (value, suffix) => Number.isFinite(value) ? `${number(value)} ${suffix}` : '—';
 const seedName = asset => `Seed ${String(asset.seed).padStart(4, '0')}`;
 const fields = values => `<div class="gx-property-grid">${values.map(([name,value]) => `<div><small>${escape(name)}</small>${escape(value)}</div>`).join('')}</div>`;
-let manifest, byId, family, selected, details, viewer, viewerPromise, rig = [], part = null;
+let manifest, byId, familyOf, family, selected, details, viewer, viewerPromise, rig = [], part = null;
 let version = 0, expanded = false, partColors = false, simulation = null, simVersion = 0, loading = false;
 let pointerStart;
 
@@ -54,7 +54,8 @@ function selectFamily(id) {
   $('#gx-workbench').hidden = true; $('#gx-family').hidden = false;
   $('#gx-family-title').textContent = family.name;
   $('#gx-domain-label').textContent = family.domain.toUpperCase();
-  $('#gx-family-count').textContent = `${family.samples.length} seeds from one shared generator`;
+  const generators = family.templateHashes ? Object.keys(family.templateHashes).length : 1;
+  $('#gx-family-count').textContent = `${family.samples.length} seeds from ${generators > 1 ? `${generators} generator variants` : 'one shared generator'}`;
   $('#gx-input-choices').innerHTML = family.inputs.length > 1 ? family.inputs.map((input, i) => `<button data-input="${i}" aria-label="Input image ${i+1}" aria-pressed="${i===0}"><img src="${url(input.image)}" alt="" loading="lazy"/></button>`).join('') : '';
   $$('[data-input]').forEach(button => button.addEventListener('click', () => showInput(Number(button.dataset.input))));
   showInput(0); renderCategories(); renderSeeds();
@@ -221,7 +222,8 @@ function renderRecord() {
 
 async function openAsset(id, scroll = false) {
   const asset = byId.get(id); if (!asset) return;
-  if (family?.id !== asset.category) selectFamily(asset.category);
+  const owner = familyOf.get(id) || asset.category;
+  if (family?.id !== owner) selectFamily(owner);
   const ticket = ++version;
   stopSimulation(); loading = true; selected = asset; details = null; rig = []; part = null;
   renderSeeds(); $('#gx-workbench').hidden = false; delete $('#gx-workbench').dataset.loaded;
@@ -291,9 +293,9 @@ window.rfwExplorer = {openAsset, selectFamily, selectPart, enableSimulation,
   get viewer(){return viewer;},get simulation(){return simulation;},get rig(){return rig;},
   get selected(){return selected;},get details(){return details;},get manifest(){return manifest;}};
 fetch(url('data/explorer.json')).then(r=>{if(!r.ok)throw Error('unavailable');return r.json();}).then(data=>{
-  const featured=['Music_Headphone','Chair_Folding_chair','Handtools_Clamp','Sports_Roller_scates','Technology_Laptop','Sports_Table_football','Handtools_dial_caliper','Light_Latern','Other_Folding_screen','Accessories_glasses','Handtools_Stapler','Technology_Graphics_Card','Bag_Suitcase_Treasure_chest','Others_Binocular','Headwear_Racing_helmet'];
+  const featured=['Music_Headphone','Military_helicopter','Handtools_Clamp','Sports_Roller_scates','Music_keyboard','Sports_Skateboard','Handtools_dial_caliper','Light_Latern','Other_Folding_screen','Accessories_glasses','watch','Astronomy_Astronaut_helmet','Urban_Environment_Tilt_Truck','Others_Binocular','pictureX_0611_full_height_turnstile'];
   data.families.sort((a,b)=>(featured.includes(a.id)?featured.indexOf(a.id):100)-(featured.includes(b.id)?featured.indexOf(b.id):100));
-  manifest=data;byId=new Map(data.assets.map(a=>[a.id,a]));
+  manifest=data;byId=new Map(data.assets.map(a=>[a.id,a]));familyOf=new Map(data.families.flatMap(f=>f.samples.map(s=>[s,f.id])));
   $('#gx-domain').innerHTML='<option value="all">All categories</option>'+[...new Set(data.families.map(f=>f.domain))].sort().map(d=>`<option>${escape(d)}</option>`).join('');
   selectFamily(data.families[0].id);
   const sample=new URLSearchParams(location.search).get('sample');
