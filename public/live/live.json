@@ -1,0 +1,24 @@
+{
+ "pyodideVersion": "314.0.7",
+ "zip": "live/articraft-live.zip",
+ "vendorDir": "vendor/pyodide",
+ "wheels": [
+  "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl"
+ ],
+ "objects": [
+  "cabinet_paper_showcase"
+ ],
+ "baseConfig": {
+  "body_form": "rect_box",
+  "carcass_depth_m": 0.44,
+  "carcass_height_m": 1.25,
+  "carcass_width_m": 1.0,
+  "door_count": 2,
+  "door_kind": "flush_slab",
+  "door_mechanism": "revolute_swing",
+  "interior_fitment": "plain_shelf",
+  "palette": 1,
+  "shelf_count": 2,
+  "support_base": "recessed_plinth"
+ }
+}

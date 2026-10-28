@@ -2,8 +2,9 @@ import './explorer.js';
 import './scenes.js';
 import './hero.js';
 import './robotics.js';
+import './editing.js';
 import './style.css';
-import {scenes,edits,scaleRows,qualityRows,transferRows} from './data.js';
+import {scenes,scaleRows,qualityRows,transferRows} from './data.js';
 const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];
 const base=import.meta.env.BASE_URL;
 const url=p=>base+p;
@@ -41,14 +42,6 @@ $$('[data-lightbox]').forEach(b=>b.addEventListener('click',()=>{const d=$('#fig
 
 $('#sample-count').addEventListener('input',e=>{const n=Number(e.target.value),cost=10.62/n;$('#sample-output').textContent=n.toLocaleString();$('#our-cost').textContent='$'+cost.toFixed(cost<1?3:2);$('#our-cost-bar').style.width=Math.min(100,cost/Math.max(1.237,cost)*100)+'%';$('.cost-row:not(.ours) .cost-track i').style.width=(1.237/Math.max(1.237,cost)*100)+'%';});
 $('#sample-count').dispatchEvent(new Event('input'));
-let activeEdit='component';
-function renderEdit(kind){
- activeEdit=kind;const e=edits[kind];$('#edit-title').textContent=e.title;$('#edit-description').textContent=e.description;$('#edit-before').src=url(`media/edit-${e.folder}-${e.files[0]}.webp`);$('#edit-before').alt=e.labels[0]+' reference configuration';$('#edit-before-caption').textContent=e.labels[0];
- $('#edit-options').innerHTML='<legend class="sr-only">Select a configuration</legend>'+e.labels.map((v,i)=>`<button data-variant="${i}" aria-pressed="false">${v}</button>`).join('');
- $$('#edit-options button').forEach(b=>b.addEventListener('click',()=>setVariant(Number(b.dataset.variant))));setVariant(1);
-}
-function setVariant(i){const e=edits[activeEdit];$('#edit-after').src=url(`media/edit-${e.folder}-${e.files[i]}.webp`);$('#edit-after').alt=e.labels[i]+' edited configuration';$('#edit-after-caption').textContent=e.labels[i];$('#edit-code').textContent=`${e.key} = ${JSON.stringify(e.values[i])}`;$$('#edit-options button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));}
-$$('[data-edit]').forEach(b=>b.addEventListener('click',()=>{selectTab($$('[data-edit]'),b);renderEdit(b.dataset.edit);}));renderEdit('component');
 let result='scale',sortColumn=null,sortDescending=true;
 function renderResults(){
  let heads,rows,note;

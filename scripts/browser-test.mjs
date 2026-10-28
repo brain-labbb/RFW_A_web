@@ -16,8 +16,23 @@ for(const s of ['indoor','outdoor','space','laboratory']){
 }
 await page.locator('#sample-count').fill('1000');check('Cost calculator uses the paper formula',await page.locator('#our-cost').textContent()==='$0.011');await page.locator('#sample-count').fill('200');
 for(const e of ['component','count','material','size']){
- await page.locator(`[data-edit="${e}"]`).click();await page.locator('[data-variant="3"]').click();await page.waitForFunction(()=>document.querySelector('#edit-after').complete&&document.querySelector('#edit-after').naturalWidth>0);check(`${e} editing variant renders`,await page.locator('[data-variant="3"]').getAttribute('aria-pressed')==='true');
+ await page.locator('#editing').scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>window.__editingReady,{timeout:60000});
+ await page.locator(`#edit3d-kinds [data-k="${e}"]`).click();
+ await page.waitForFunction(()=>document.querySelectorAll('#edit3d-variants button').length>0);
+ const buttons=await page.locator('#edit3d-variants button').count();
+ await page.locator('#edit3d-variants button').nth(buttons-1).click();
+ await page.waitForFunction(()=>window.rfwEditing?.newView?.model,{timeout:60000});
+ check(`${e} editing variant renders`,await page.locator('#edit3d-variants button').last().getAttribute('aria-pressed')==='true'&&await page.locator('#edit3d-new canvas').isVisible());
 }
+await page.locator('#edit3d-kinds [data-k="count"]').click();
+await page.locator('#edit3d-prompt').fill('4 doors');await page.locator('#edit3d-prompt-form button[type=submit]').click();
+check('Prompt maps to a generator configuration',(await page.locator('#edit3d-code').textContent()).includes('door_count'));
+for(const o of [1,4]){
+ await page.locator(`#edit3d-objects button`).nth(o).click();await page.waitForFunction(()=>window.rfwEditing?.newView?.model,{timeout:60000});
+ check(`Object ${o} switches with variants`,await page.locator('#edit3d-variants button').count()>0);
+}
+await page.locator('#edit3d-objects button').nth(0).click();
 await page.locator('[data-result="validity"]').click();check('Quality table has all eight datasets',await page.locator('#results-table tbody tr').count()===8);
 await page.locator('[data-result="transfer"]').click();await page.locator('#split-select').selectOption('in');check('Articulation-estimation split changes',await page.locator('#results-table').textContent().then(t=>t.includes('0.78873')));
 await page.locator('[data-result="scale"]').click();await page.locator('[data-sort="1"]').click();check('Result table sorts numerically',await page.locator('#results-table tbody tr').first().textContent().then(t=>t.includes('RFW-A')));
@@ -28,7 +43,7 @@ for(const task of ['round_cabinet','folding_chair','double_door','toaster','fold
 }
 await page.locator('#robotics-replay').click();await page.waitForFunction(()=>[...document.querySelectorAll('#robotics-grid video')].some(v=>v.currentTime>0),{timeout:20000});check('Robotics recordings decode and play',true);await page.locator('#robotics-play').click();
 await page.locator('.film-open').click();check('Film opens in a dialog',await page.locator('#film-dialog').isVisible());await page.keyboard.press('Escape');check('Closing film pauses playback',await page.locator('#film-dialog video').evaluate(v=>v.paused));
-await page.locator('[data-scene="indoor"]').click();await page.locator('#scene-play').click();await page.evaluate(()=>document.querySelector('#scene-video').pause());await page.locator('[data-edit="component"]').click();
+await page.locator('[data-scene="indoor"]').click();await page.locator('#scene-play').click();await page.evaluate(()=>document.querySelector('#scene-video').pause());await page.locator('#edit3d-kinds [data-k="component"]').click();
 await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:'/tmp/rfw-web/desktop-final.png',fullPage:true});
 check('Desktop has no horizontal overflow',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
 const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
