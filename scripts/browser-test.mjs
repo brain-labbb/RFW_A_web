@@ -17,20 +17,20 @@ for(const s of ['indoor','outdoor','space','laboratory']){
 await page.locator('#sample-count').fill('1000');check('Cost calculator uses the paper formula',await page.locator('#our-cost').textContent()==='$0.011');await page.locator('#sample-count').fill('200');
 for(const e of ['component','count','material','size']){
  await page.locator('#editing').scrollIntoViewIfNeeded();
- await page.waitForFunction(()=>window.__editingReady,{timeout:60000});
+ await page.waitForFunction(()=>window.__editingReady,null,{timeout:60000});
  await page.locator(`#edit3d-kinds [data-k="${e}"]`).click();
- await page.waitForFunction(()=>document.querySelectorAll('#edit3d-variants button').length>0);
- const buttons=await page.locator('#edit3d-variants button').count();
- await page.locator('#edit3d-variants button').nth(buttons-1).click();
- await page.waitForFunction(()=>window.rfwEditing?.newView?.model,{timeout:60000});
- check(`${e} editing variant renders`,await page.locator('#edit3d-variants button').last().getAttribute('aria-pressed')==='true'&&await page.locator('#edit3d-new canvas').isVisible());
+ await page.waitForFunction(()=>document.querySelectorAll('#edit3d-values button').length>0);
+ const buttons=await page.locator('#edit3d-values button').count();
+ await page.locator('#edit3d-values button').nth(buttons-1).click();
+ await page.waitForFunction(()=>window.rfwEditing?.newView?.model,null,{timeout:60000});
+ check(`${e} editing variant renders`,await page.locator('#edit3d-values button').last().getAttribute('aria-pressed')==='true'&&await page.locator('#edit3d-new canvas').isVisible());
 }
 await page.locator('#edit3d-kinds [data-k="count"]').click();
-await page.locator('#edit3d-prompt').fill('4 doors');await page.locator('#edit3d-prompt-form button[type=submit]').click();
-check('Prompt maps to a generator configuration',(await page.locator('#edit3d-code').textContent()).includes('door_count'));
+await page.locator('#edit3d-values button').last().click();
+check('Variant selection updates the config readout',(await page.locator('#edit3d-code').textContent()).includes('door_count'));
 for(const o of [1,4]){
- await page.locator(`#edit3d-objects button`).nth(o).click();await page.waitForFunction(()=>window.rfwEditing?.newView?.model,{timeout:60000});
- check(`Object ${o} switches with variants`,await page.locator('#edit3d-variants button').count()>0);
+ await page.locator(`#edit3d-objects button`).nth(o).click();await page.waitForFunction(()=>window.rfwEditing?.newView?.model,null,{timeout:60000});
+ check(`Object ${o} switches with variants`,await page.locator('#edit3d-values button').count()>0);
 }
 await page.locator('#edit3d-objects button').nth(0).click();
 await page.locator('[data-result="validity"]').click();check('Quality table has all eight datasets',await page.locator('#results-table tbody tr').count()===8);

@@ -1,5 +1,8 @@
 /* Directed-editing 3D workbench */
 .edit3d{border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:16px;background:#fff}
+.edit3d-guide{display:flex;gap:18px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);margin:0;background:var(--faint)}
+.edit3d-guide span{font-size:10px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.edit3d-guide i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;border:1px solid var(--line);color:var(--accent);font-size:9px}
 .edit3d-objects{display:flex;gap:10px;padding:14px;border-bottom:1px solid var(--line);overflow-x:auto}
 .edit3d-objects button{display:flex;flex-direction:column;align-items:center;gap:6px;border:1px solid var(--line);border-radius:4px;background:#fff;padding:8px;min-width:118px;cursor:pointer}
 .edit3d-objects button img{width:104px;height:74px;object-fit:contain;mix-blend-mode:multiply}
@@ -12,36 +15,24 @@
 .edit3d-stage .image-tag.accent{color:var(--accent)}
 .edit3d-view{width:100%;aspect-ratio:4/3;margin:9px 0 12px;border:1px solid var(--line);border-radius:3px;background:#f4f4f4;position:relative}
 .edit3d-view canvas{display:block;width:100%;height:100%;outline:none}
+.edit3d-orbit{position:absolute;right:8px;bottom:6px;font-size:8px;color:var(--muted);opacity:.7;pointer-events:none}
 .edit3d-stage figcaption{font-size:11px;text-align:center;color:var(--ink)}
 .edit3d-controls{border-top:1px solid var(--line);padding:18px 20px;display:grid;gap:12px}
-.edit3d-controls .pill-tabs button{font-size:10px}
-.edit3d-controls .pill-tabs button span{font-size:11px;margin-left:10px}
-.edit3d-axes{display:flex;gap:5px;flex-wrap:wrap}
-.edit3d-axes button{font-size:10px;border:1px dashed var(--line);border-radius:3px;padding:6px 10px;color:var(--muted);background:#fff}
-.edit3d-axes button[aria-pressed=true]{border-style:solid;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.edit3d-controls fieldset{border:0;padding:0;margin:0;display:flex;gap:5px;flex-wrap:wrap}
-.edit3d-controls fieldset button{font-size:10px;border:1px solid var(--line);border-radius:3px;padding:6px 8px;display:inline-flex;align-items:center;gap:6px;background:#fff;cursor:pointer}
-.edit3d-controls fieldset button[aria-pressed=true]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.edit3d-row{display:flex;gap:12px;align-items:flex-start}
+.edit3d-rowlabel{flex:0 0 52px;padding-top:6px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.edit3d-controls .pill-tabs button{font-size:11px}
+.edit3d-values{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0}
+.edit3d-values>button,.edit3d-group-buttons>button{font-size:10px;border:1px solid var(--line);border-radius:3px;padding:6px 8px;display:inline-flex;align-items:center;gap:6px;background:#fff;cursor:pointer}
+.edit3d-values button[aria-pressed=true]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.edit3d-group{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.edit3d-group+.edit3d-group{margin-left:8px;padding-left:8px;border-left:1px dashed var(--line)}
+.edit3d-group-label{font-size:9px;color:var(--muted);letter-spacing:.05em}
+.edit3d-group-buttons{display:inline-flex;gap:5px;flex-wrap:wrap}
 .edit3d-controls .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;border:1px solid var(--line)}
-.edit3d-prompt{display:flex;gap:6px}
-.edit3d-prompt input{flex:1;border:1px solid var(--line);border-radius:3px;padding:8px 10px;font-size:12px;font-family:var(--sans)}
-.edit3d-prompt input:focus{outline:none;border-color:var(--accent)}
-.edit3d-prompt button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:3px;padding:8px 16px;font-size:11px;cursor:pointer}
-.edit3d-chips{display:flex;gap:5px;flex-wrap:wrap}
-.edit3d-chips button{font-size:10px;color:var(--muted);border:1px solid var(--line);background:var(--faint);border-radius:20px;padding:5px 10px;cursor:pointer}
-.edit3d-chips button:hover{color:var(--accent);border-color:var(--accent)}
-.edit3d-prompt-note{font-size:9px;color:var(--muted);min-height:12px}
 .edit3d .note{font-size:9px;color:var(--muted);line-height:1.6}
-.edit3d-live-row{display:flex;align-items:center;gap:10px}
-.edit3d-live{font-size:10px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:6px 12px;background:#fff;cursor:pointer}
-.edit3d-live[aria-pressed=true]{background:var(--accent);color:#fff}
-.edit3d-live:disabled{opacity:.6;cursor:wait}
-.edit3d-live-status{font-size:9px;color:var(--muted)}
-.edit3d-slider{display:flex;align-items:center;gap:10px;font-size:10px;color:var(--muted)}
-.edit3d-slider input[type=range]{flex:0 1 240px;accent-color:var(--accent)}
-.edit3d-slider output{font-size:10px;min-width:44px}
 @media(max-width:680px){
  .edit3d-stages{grid-template-columns:1fr}
  .edit3d-objects button{min-width:96px}
  .edit3d-objects button img{width:84px;height:60px}
+ .edit3d-rowlabel{flex-basis:44px}
 }
