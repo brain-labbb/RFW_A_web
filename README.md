@@ -17,7 +17,7 @@ The build supports a subdirectory such as GitHub Pages. Deploy the contents of `
 
 ## Release links
 
-All three buttons deliberately remain **SOON**, including Paper. No local paper PDF is published. When public URLs are available, edit `public/data/resources.json`:
+The Paper button links to the public arXiv release; Code and Dataset buttons deliberately remain **SOON**. No local paper PDF is published. When public URLs are available, edit `public/data/resources.json`:
 
 ```json
 {"paper": null, "code": null, "dataset": null}
@@ -115,7 +115,7 @@ To rebuild annotations, run `prepare_scene_expansion.py` with Blender once per s
 
 The first screen uses a full-width, muted scene video behind the paper title, all 22 authors, affiliations, and resource links. Its layout follows the supplied Artisan screenshot: a white navigation bar, white overlaid metadata, translucent buttons, and scene/playback controls along the bottom. The four scene buttons change the background. “Watch scene” hides the paper overlay; Escape or the Paper navigation restores it. “Explore this scene” selects the corresponding scene explorer.
 
-“Watch full video” opens the supplied `2610261545030522.mp4` (2:24, including audio) using the existing film player; the published MP4 matches the supplied file byte-for-byte. Other videos pause while the film is open. Background playback pauses offscreen and respects reduced-motion and data-saving preferences. Benchmark remains a results section, without a navigation or hero button. Paper, Code, and Dataset links remain pending.
+“Watch full video” opens the supplied `2610261545030522.mp4` (2:24, including audio) using the existing film player; the published MP4 matches the supplied file byte-for-byte. Other videos pause while the film is open. Background playback pauses offscreen and respects reduced-motion and data-saving preferences. Benchmark remains a results section, without a navigation or hero button. The Paper link points to the arXiv release; Code and Dataset links remain pending.
 
 `npm run test:hero` checks scene switching/playback, overlay controls, the full film, pending links, mobile layout, and reduced-motion behavior. Set `TEST_URL` and `PLAYWRIGHT_BROWSERS_PATH` as in the other browser checks.
 
