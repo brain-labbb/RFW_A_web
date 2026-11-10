@@ -17,13 +17,13 @@ The build supports a subdirectory such as GitHub Pages. Deploy the contents of `
 
 ## Release links
 
-The Paper button links to the public arXiv release and the Dataset button to the public ModelScope release; the Code button deliberately remains **SOON**. No local paper PDF is published. The URLs live in `public/data/resources.json`:
+The Paper button links to the public arXiv release, the Dataset button to the public ModelScope dataset release, and the Gallery button to the public ModelScope studio (RoboFlyWheel-Assets3D) for online 3D browsing and per-asset download; the Code button deliberately remains **SOON**. No local paper PDF is published. The URLs live in `public/data/resources.json`:
 
 ```json
-{"paper": "https://arxiv.org/pdf/2610.40333", "code": null, "dataset": "https://modelscope.cn/datasets/RoboFlywheel/RoboFlywheel-Articulation"}
+{"paper": "https://arxiv.org/pdf/2610.40333", "code": null, "dataset": "https://modelscope.cn/datasets/RoboFlywheel/RoboFlywheel-Articulation", "gallery": "https://modelscope.cn/studios/RoboFlywheel/RoboFlyWheel-Assets3D"}
 ```
 
-Replace each `null` with its public HTTPS URL and rebuild. The three hero resource buttons update automatically. The footer contains only the citation and website credit.
+Replace each `null` with its public HTTPS URL and rebuild. The four hero resource buttons update automatically. The footer contains only the citation and website credit.
 
 ## Included content
 

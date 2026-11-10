@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile,access,mkdir,writeFile} from 'node:fs/promises';
 const root=new URL('../',import.meta.url), report={checks:[],errors:[]};
 const check=(name,condition)=>{assert.ok(condition,name);report.checks.push(name);console.log('PASS',name);};
-const resources=JSON.parse(await readFile(new URL('public/data/resources.json',root),'utf8'));check('Paper and Dataset links are published; Code remains pending',/^https:\/\//.test(resources.paper)&&/^https:\/\//.test(resources.dataset)&&resources.code===null);
+const resources=JSON.parse(await readFile(new URL('public/data/resources.json',root),'utf8'));check('Paper, Dataset and Gallery links are published; Code remains pending',/^https:\/\//.test(resources.paper)&&/^https:\/\//.test(resources.dataset)&&/^https:\/\//.test(resources.gallery)&&resources.code===null);
 const browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
@@ -11,6 +11,7 @@ await page.goto(process.env.TEST_URL||'http://127.0.0.1:4173/',{waitUntil:'netwo
 check('Only the Code hero release button is pending',await page.locator('.resource-links button:disabled').count()===1);
 check('Hero Paper link points to the published URL',await page.locator('.resource-links a').nth(0).getAttribute('href')===resources.paper);
 check('Hero Dataset link points to the published URL',await page.locator('.resource-links a').nth(1).getAttribute('href')===resources.dataset);
+check('Hero Gallery link points to the published URL',await page.locator('.resource-links a').nth(2).getAttribute('href')===resources.gallery);
 check('No local paper PDF is linked',await page.locator('a[href$=".pdf"]').count()===0);
 for(const s of ['indoor','outdoor','space','laboratory']){
  await page.locator(`[data-scene="${s}"]`).click();await page.waitForFunction(()=>document.querySelector('#scene-map-image').complete&&document.querySelector('#scene-map-image').naturalWidth>0,{timeout:20000});
