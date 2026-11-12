@@ -77,3 +77,16 @@ input[type=range]{accent-color:var(--accent)}
 
 .scene-material-details{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;font-size:11px}.scene-material-details summary{cursor:pointer;color:var(--muted)}.scene-material-extra{margin-top:12px}
 .scene-joint-scroll th,.scene-joint-scroll td{white-space:normal;word-break:normal}
+
+/* Simulation demo grid: letterboxed previews tolerate mixed aspect ratios (1:1 to 21:9). */
+.simdemo-section{border-top:1px solid var(--line)}
+.simdemo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.simdemo-grid figure{min-width:0;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--faint)}
+.simdemo-grid figure:hover{border-color:#999}
+.simdemo-open{display:block;position:relative;width:100%;padding:0;text-align:left}
+.simdemo-grid video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#f5f5f5}
+.simdemo-hint{position:absolute;right:8px;bottom:8px;padding:4px 7px;border:1px solid #ffffff88;border-radius:3px;background:#0009;color:#fff;font-size:10px;opacity:0;transition:opacity .15s}
+.simdemo-open:hover .simdemo-hint,.simdemo-open:focus-visible .simdemo-hint{opacity:1}
+.simdemo-grid figcaption{padding:9px 12px;background:#fff;font-size:13px}
+@media(max-width:900px){.simdemo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.simdemo-grid{grid-template-columns:minmax(0,1fr);gap:12px}.simdemo-hint{opacity:1;font-size:9px;padding:2px 4px;right:4px;bottom:4px}}

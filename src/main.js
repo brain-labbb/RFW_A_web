@@ -2,6 +2,7 @@ import './explorer.js';
 import './scenes.js';
 import './hero.js';
 import './robotics.js';
+import './simdemo.js';
 import './editing.js';
 import './style.css';
 import {scenes,scaleRows,qualityRows,transferRows} from './data.js';
